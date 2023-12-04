@@ -93,7 +93,6 @@ public:
     vector<T> dfs() const;
     vector<T> dfs(const T & source) const;
     vector<T> bfs(const T &source) const;
-    vector<T> topsort() const;
     bool isDAG() const;
 };
 
