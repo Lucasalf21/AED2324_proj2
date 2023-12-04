@@ -1,0 +1,3 @@
+/home/up202204873/AED2324_proj2/cmake-build-debug/CMakeFiles/AED2324_proj2.dir
+/home/up202204873/AED2324_proj2/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/up202204873/AED2324_proj2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
