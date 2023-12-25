@@ -49,12 +49,12 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/home/up202204873/AED2324_proj2/cmake-build-debug",
-		"source" : "/home/up202204873/AED2324_proj2"
+		"build" : "/home/lucasalf/Desktop/AED/AED2324_proj2/cmake-build-debug",
+		"source" : "/home/lucasalf/Desktop/AED/AED2324_proj2"
 	},
 	"version" : 
 	{
 		"major" : 2,
-		"minor" : 5
+		"minor" : 6
 	}
 }
