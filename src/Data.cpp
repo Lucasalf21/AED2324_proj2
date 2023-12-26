@@ -2,6 +2,7 @@
 
 void Data::newAirport(Airport* airport) {
     airports.insert(airport);
+    graph.addVertex(airport);
 }
 
 void Data::newAirline(Airline* airline) {
@@ -17,6 +18,12 @@ Airline *Data::getAirline(string code) {
 }
 
 Data::Data() {
+    graph = Graph<Airport*>();
+    airlines = set<Airline*>();
+    airports = set<Airport*>();
+}
 
+void Data::newFlight(Flight *flight) {
+    graph.addEdge(flight->getSource(), flight->getDestination(), flight->getAirline());
 }
 

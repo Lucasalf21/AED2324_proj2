@@ -1,23 +1,21 @@
-/*
 #include "Flight.h"
 
 #include <utility>
 
-Flight::Flight(Airport source, Airport destination, Airline airline) {
-    this->source = std::move(source);
-    this->destination = std::move(destination);
-    this->airline = std::move(airline);
+Flight::Flight(Airport* source, Airport* destination, Airline* airline) {
+    this->source = source;
+    this->destination = destination;
+    this->airline = airline;
 }
 
-Airport Flight::getSource() {
+Airport* Flight::getSource() {
     return source;
 }
 
-Airport Flight::getDestination() {
+Airport* Flight::getDestination() {
     return destination;
 }
 
-Airline Flight::getAirline() {
+Airline* Flight::getAirline() {
     return airline;
 }
-*/

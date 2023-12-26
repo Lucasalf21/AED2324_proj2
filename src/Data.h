@@ -17,6 +17,7 @@ public:
     Data();
     void newAirport(Airport* airport);
     void newAirline(Airline* airline);
+    void newFlight(Flight* flight);
     Airport* getAirport(string code);
     Airline* getAirline(string code);
 

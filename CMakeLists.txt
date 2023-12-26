@@ -17,4 +17,7 @@ add_executable(AED2324_proj2 src/main.cpp
         src/Flight.h
         src/Flight.h
         src/Data.cpp
-        src/Data.h)
+        src/Data.h
+        src/Filereader.cpp
+        src/Filereader.h
+)
