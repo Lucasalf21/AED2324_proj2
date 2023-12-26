@@ -1,6 +1,7 @@
 #include <iostream>
+#include "Menu.h"
 
 int main() {
-    std::cout << "Merry Chrysler!" << std::endl;
+    Menu menu = Menu();
     return 0;
 }
