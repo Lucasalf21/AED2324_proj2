@@ -5,4 +5,12 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(AED2324_proj2 src/main.cpp
         src/Graph.h
-        src/Graph.cpp)
+        src/Graph.cpp
+        src/Airport.cpp
+        src/Airport.h
+        src/Airport.h
+        src/Airline.cpp
+        src/Airline.h
+        src/Flight.cpp
+        src/Flight.h
+        src/Flight.h)
