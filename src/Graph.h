@@ -1,7 +1,3 @@
-//
-// Created by up202204873 on 04-12-2023.
-//
-
 #ifndef AED2324_PROJ2_GRAPH_H
 #define AED2324_PROJ2_GRAPH_H
 
@@ -11,6 +7,7 @@
 #include <queue>
 #include <stack>
 #include <list>
+#include "Airline.h"
 
 using namespace std;
 
@@ -22,7 +19,7 @@ template <class T> class Vertex;
 /****************** Provided structures  ********************/
 
 template <class T>
-class Vertex {
+class Vertex {             // an airport
     T info;                // contents
     vector<Edge<T> > adj;  // list of outgoing edges
     bool visited;          // auxiliary field
@@ -60,8 +57,9 @@ public:
 };
 
 template <class T>
-class Edge {
+class Edge {               // a flight
     Vertex<T> * dest;      // destination vertex
+    Airline airline;       // flight airline
     double weight;         // edge weight
 public:
     Edge(Vertex<T> *d, double w);
@@ -78,7 +76,7 @@ class Graph {
     vector<Vertex<T> *> vertexSet;      // vertex set
     int _index_;                        // auxiliary field
     stack<Vertex<T>> _stack_;           // auxiliary field
-    list<list<T>> _list_sccs_;        // auxiliary field
+    list<list<T>> _list_sccs_;          // auxiliary field
 
     void dfsVisit(Vertex<T> *v,  vector<T> & res) const;
     bool dfsIsDAG(Vertex<T> *v) const;
