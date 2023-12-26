@@ -59,10 +59,10 @@ public:
 template <class T>
 class Edge {               // a flight
     Vertex<T> * dest;      // destination vertex
-    Airline airline;       // flight airline
-    double weight;         // edge weight
+    Airline * airline;       // flight airline
+    double weight;
 public:
-    Edge(Vertex<T> *d, double w);
+    Edge(Vertex<T> *d, Airline * airline);
     Vertex<T> *getDest() const;
     void setDest(Vertex<T> *dest);
     double getWeight() const;
@@ -85,7 +85,7 @@ public:
     int getNumVertex() const;
     bool addVertex(const T &in);
     bool removeVertex(const T &in);
-    bool addEdge(const T &sourc, const T &dest, double w);
+    bool addEdge(const T &sourc, const T &dest, Airline * airline);
     bool removeEdge(const T &sourc, const T &dest);
     vector<Vertex<T> * > getVertexSet() const;
     vector<T> dfs() const;
