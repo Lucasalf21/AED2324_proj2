@@ -1,7 +1,3 @@
-//
-// Created by Gonçalo Carvalho on 26/12/2023.
-//
-
 #include "Airport.h"
 
 #include <utility>
@@ -44,4 +40,8 @@ Airport::Airport() {    // default constructor
     this->city = "";
     this->country = "";
     this->coordinates = make_pair(0, 0);
+}
+
+bool Airport::operator<(const Airport &airport) const {
+    return this->code < airport.code;
 }

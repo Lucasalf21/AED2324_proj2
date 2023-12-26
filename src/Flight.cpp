@@ -1,7 +1,4 @@
-//
-// Created by Gonçalo Carvalho on 26/12/2023.
-//
-
+/*
 #include "Flight.h"
 
 #include <utility>
@@ -23,3 +20,4 @@ Airport Flight::getDestination() {
 Airline Flight::getAirline() {
     return airline;
 }
+*/
