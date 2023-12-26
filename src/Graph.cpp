@@ -1,13 +1,11 @@
-//
-// Created by up202204873 on 04-12-2023.
-//
-
 #include "Graph.h"
+
+#include <utility>
 template <class T>
 Vertex<T>::Vertex(T in): info(in) {}
 
 template <class T>
-Edge<T>::Edge(Vertex<T> *d, double w): dest(d), weight(w) {}
+Edge<T>::Edge(Vertex<T> *d, Airline * airline): dest(d), airline(airline) {}
 
 
 template <class T>
@@ -141,12 +139,12 @@ bool Graph<T>::addVertex(const T &in) {
  * Returns true if successful, and false if the source or destination vertex does not exist.
  */
 template <class T>
-bool Graph<T>::addEdge(const T &sourc, const T &dest, double w) {
+bool Graph<T>::addEdge(const T &sourc, const T &dest) {
     auto v1 = findVertex(sourc);
     auto v2 = findVertex(dest);
     if (v1 == NULL || v2 == NULL)
         return false;
-    v1->addEdge(v2,w);
+    v1->addEdge(v2);
     return true;
 }
 
@@ -336,4 +334,23 @@ bool Graph<T>::dfsIsDAG(Vertex<T> *v) const {
     }
     v->processing = false;
     return true;
+}
+
+// new methods
+
+template<class T>
+bool Graph<T>::hasEdge(const T &sourc, const T &dest) const {
+    auto v1 = findVertex(sourc);
+    auto v2 = findVertex(dest);
+
+    if (v1 == nullptr || v2 == nullptr)
+        return false;
+
+    for (const auto &edge : v1->getAdj()) {
+        if (edge.getDest() == v2) {
+            return true;
+        }
+    }
+
+    return false;
 }

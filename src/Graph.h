@@ -1,7 +1,3 @@
-//
-// Created by up202204873 on 04-12-2023.
-//
-
 #ifndef AED2324_PROJ2_GRAPH_H
 #define AED2324_PROJ2_GRAPH_H
 
@@ -11,6 +7,7 @@
 #include <queue>
 #include <stack>
 #include <list>
+#include "Airline.h"
 
 using namespace std;
 
@@ -22,7 +19,7 @@ template <class T> class Vertex;
 /****************** Provided structures  ********************/
 
 template <class T>
-class Vertex {
+class Vertex {             // an airport
     T info;                // contents
     vector<Edge<T> > adj;  // list of outgoing edges
     bool visited;          // auxiliary field
@@ -60,11 +57,12 @@ public:
 };
 
 template <class T>
-class Edge {
+class Edge {               // a flight
     Vertex<T> * dest;      // destination vertex
-    double weight;         // edge weight
+    Airline * airline;       // flight airline
+    double weight;
 public:
-    Edge(Vertex<T> *d, double w);
+    Edge(Vertex<T> *d, Airline * airline);
     Vertex<T> *getDest() const;
     void setDest(Vertex<T> *dest);
     double getWeight() const;
@@ -78,16 +76,17 @@ class Graph {
     vector<Vertex<T> *> vertexSet;      // vertex set
     int _index_;                        // auxiliary field
     stack<Vertex<T>> _stack_;           // auxiliary field
-    list<list<T>> _list_sccs_;        // auxiliary field
+    list<list<T>> _list_sccs_;          // auxiliary field
 
     void dfsVisit(Vertex<T> *v,  vector<T> & res) const;
     bool dfsIsDAG(Vertex<T> *v) const;
 public:
+    bool hasEdge(const T &sourc, const T &dest) const;
     Vertex<T> *findVertex(const T &in) const;
     int getNumVertex() const;
     bool addVertex(const T &in);
     bool removeVertex(const T &in);
-    bool addEdge(const T &sourc, const T &dest, double w);
+    bool addEdge(const T &sourc, const T &dest);
     bool removeEdge(const T &sourc, const T &dest);
     vector<Vertex<T> * > getVertexSet() const;
     vector<T> dfs() const;
@@ -95,6 +94,7 @@ public:
     vector<T> bfs(const T &source) const;
     bool isDAG() const;
 };
+
 
 
 #endif //AED2324_PROJ2_GRAPH_H
