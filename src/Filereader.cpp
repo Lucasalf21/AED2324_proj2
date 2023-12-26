@@ -5,6 +5,7 @@
 #include <fstream>
 #include <utility>
 #include <sstream>
+#include <iostream>
 #include "Filereader.h"
 
 Filereader::Filereader(Data *data) {
@@ -13,7 +14,8 @@ Filereader::Filereader(Data *data) {
 
 void Filereader::readAirports() {
     string line;
-    ifstream airports("../files/airports.txt");
+    ifstream airports("../files/airports.csv");
+    getline(airports, line); //Skip first line (header)
 
     while(getline(airports, line)) {
         line = removeComma(std::move(line));
@@ -36,7 +38,8 @@ void Filereader::readAirports() {
 
 void Filereader::readAirlines() {
     string line;
-    ifstream airlines("../files/airlines.txt");
+    ifstream airlines("../files/airlines.csv");
+    getline(airlines, line); //Skip first line (header)
 
     while(getline(airlines, line)) {
         line = removeComma(std::move(line));
@@ -55,7 +58,8 @@ void Filereader::readAirlines() {
 
 void Filereader::readFlights(){
     string line;
-    ifstream flights("../files/flights.txt");
+    ifstream flights("../files/flights.csv");
+    getline(flights, line); //Skip first line (header)
 
     while(getline(flights, line)) {
         line = removeComma(std::move(line));
@@ -97,5 +101,10 @@ void Filereader::read() {
     readAirports();
     readAirlines();
     readFlights();
+
+    //Testing:
+    cout << "Airports: " << data->numberAirports() << endl;
+    cout << "Airlines: " << data->numberAirlines() << endl;
+    cout << "Flights: " << data->numberFlights() << endl;
 }
 
