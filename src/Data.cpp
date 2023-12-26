@@ -1,5 +1,8 @@
 #include "Data.h"
 
+Data::Data() {
+}
+
 void Data::newAirport(Airport* airport) {
     airports.insert(airport);
 }
@@ -18,9 +21,6 @@ Airport *Data::getAirport(string code) {
 
 Airline *Data::getAirline(string code) {
     return *airlines.find(new Airline(code));
-}
-
-Data::Data() {
 }
 
 unsigned long Data::numberAirports() {

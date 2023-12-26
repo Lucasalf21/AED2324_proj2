@@ -7,7 +7,8 @@
 
 using namespace std;
 
-Menu::Menu(){
+Menu::Menu(Data* data){
+    this->data = data;
     int choice = 1;
 
     while (choice != 0){
@@ -28,10 +29,10 @@ Menu::Menu(){
                 statistics();
                 break;
             case 2:
-                //bestFlightOption();
+                bestFlightOption(); //TODO
                 break;
             case 3:
-                //searchWithFilters();
+                searchWithFilters(); //TODO
                 break;
             case 0:
                 break;
@@ -47,17 +48,18 @@ void Menu::statistics() {
     while (choice != 69){
         cout << " __________________________________________________ " << endl
              << " 1 - Global number of airports " << endl
-             << " 2 - Global number of flights" << endl
-             << " 3 - Flights out of an airport" << endl
-             << " 4 - Flights from an airline" << endl
-             << " 5 - Number of flights per city" << endl
-             << " 6 - Number of flights per airline" << endl
-             << " 7 - Countries an airport flies to" << endl
-             << " 8 - Countries a city flies to" << endl
-             << " 9 - Destinations available for an airport" << endl
-             << " 10 - Reachable destinations from an airport in a number of stops" << endl
-             << " 11 - Maximum trip (?)" << endl
-             << " 12 - Top airports with greatest air traffic capacity" << endl
+             << " 2 - Global number of airlines" << endl
+             << " 3 - Global number of flights" << endl
+             << " 4 - Flights out of an airport" << endl
+             << " 5 - Flights from an airline" << endl
+             << " 6 - Number of flights per city" << endl
+             << " 7 - Number of flights per airline" << endl
+             << " 8 - Countries an airport flies to" << endl
+             << " 9 - Countries a city flies to" << endl
+             << " 10 - Destinations available for an airport" << endl
+             << " 11 - Reachable destinations from an airport in a number of stops" << endl
+             << " 12 - Maximum trip (?)" << endl
+             << " 13 - Top airports with greatest air traffic capacity" << endl
              << endl
              << " 69 - Go back" << endl
              << " 0 - Exit" << endl
@@ -68,40 +70,43 @@ void Menu::statistics() {
 
         switch (choice) {
             case 1:
-                globalAirports();
+                globalNumAirports();
                 break;
             case 2:
-                globalFlights();
+                globalNumAirlines();
                 break;
             case 3:
-                flightsFromAirport();
+                globalNumFlights();
                 break;
             case 4:
-                flightsFromAirline();
+                flightsFromAirport(); //TODO
                 break;
             case 5:
-                numberOfFlightsAirport();
+                flightsFromAirline(); //TODO
                 break;
             case 6:
-                numberOfFlightsAirline();
+                numberOfFlightsAirport(); //TODO
                 break;
             case 7:
-                countriesFliesToAirport();
+                numberOfFlightsAirline(); //TODO
                 break;
             case 8:
-                countriesFliesToCity();
+                countriesFliesToAirport(); //TODO
                 break;
             case 9:
-                destinationsAvailableAirport();
+                countriesFliesToCity(); //TODO
                 break;
             case 10:
-                reachableDestinationsAirport();
+                destinationsAvailableAirport(); //TODO
                 break;
             case 11:
-                maximumTrip(); //?
+                reachableDestinationsAirport(); //TODO
                 break;
             case 12:
-                topAirports();
+                maximumTrip(); //? TODO
+                break;
+            case 13:
+                topAirports(); //TODO
 
             case 69:
                 return;
@@ -113,6 +118,7 @@ void Menu::statistics() {
     }
 }
 
+//Menu options
 void Menu::bestFlightOption() {
 
 }
@@ -121,16 +127,18 @@ void Menu::searchWithFilters() {
 
 }
 
-void Menu::topAirports() {
 
+//Statistics
+void Menu::globalNumAirports() {
+    cout << endl << "Number of airports: " << data->numberAirports() << endl << endl;
 }
 
-void Menu::globalAirports() {
-
+void Menu::globalNumAirlines() {
+    cout << endl << "Number of airlines: " << data->numberAirlines() << endl << endl;
 }
 
-void Menu::globalFlights() {
-
+void Menu::globalNumFlights() {
+    cout << endl << "Number of flights: " << data->numberFlights() << endl << endl;
 }
 
 void Menu::flightsFromAirport() {
@@ -166,5 +174,9 @@ void Menu::reachableDestinationsAirport() {
 }
 
 void Menu::maximumTrip() {
+
+}
+
+void Menu::topAirports() {
 
 }

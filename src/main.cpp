@@ -7,6 +7,6 @@ int main() {
     Data* data = new Data();
     auto* filereader = new Filereader(data);
     filereader->read();
-    Menu menu = Menu();
+    Menu menu = Menu(data);
     return 0;
 }

@@ -101,10 +101,5 @@ void Filereader::read() {
     readAirports();
     readAirlines();
     readFlights();
-
-    //Testing:
-    cout << "Airports: " << data->numberAirports() << endl;
-    cout << "Airlines: " << data->numberAirlines() << endl;
-    cout << "Flights: " << data->numberFlights() << endl;
 }
 

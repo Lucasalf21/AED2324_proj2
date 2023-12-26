@@ -5,37 +5,30 @@
 #ifndef AED2324_PROJ2_MENU_H
 #define AED2324_PROJ2_MENU_H
 
+#include "Data.h"
 
 class Menu {
 public:
-    Menu();
-    static void statistics();
-    static void bestFlightOption();
-    static void searchWithFilters();
+    Data* data;
 
-    static void topAirports();
+    Menu(Data* data);
+    void statistics();
+    void bestFlightOption();
+    void searchWithFilters();
 
-    static void globalAirports();
-
-    static void globalFlights();
-
-    static void flightsFromAirport();
-
-    static void flightsFromAirline();
-
-    static void numberOfFlightsAirport();
-
-    static void numberOfFlightsAirline();
-
-    static void countriesFliesToAirport();
-
-    static void countriesFliesToCity();
-
-    static void destinationsAvailableAirport();
-
-    static void reachableDestinationsAirport();
-
-    static void maximumTrip();
+    void globalNumAirports();
+    void globalNumAirlines();
+    void globalNumFlights();
+    void flightsFromAirport();
+    void flightsFromAirline();
+    void numberOfFlightsAirport();
+    void numberOfFlightsAirline();
+    void countriesFliesToAirport();
+    void countriesFliesToCity();
+    void destinationsAvailableAirport();
+    void reachableDestinationsAirport();
+    void maximumTrip();
+    void topAirports();
 };
 
 
