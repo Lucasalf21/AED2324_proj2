@@ -1,7 +1,3 @@
-//
-// Created by Gonçalo Carvalho on 26/12/2023.
-//
-
 #ifndef AED2324_PROJ2_AIRPORT_H
 #define AED2324_PROJ2_AIRPORT_H
 
@@ -18,13 +14,14 @@ private:
     pair<float, float> coordinates;
 public:
     Airport();
-    Airport(string code, string name, string city, string country, float latitude, float longitude);
+    explicit Airport(string code, string name = "", string city = "", string country = "", float latitude = 0, float longitude = 0);
     string getCode();
     string getName();
     string getCity();
     string getCountry();
     float getLatitude() const;
     float getLongitude() const;
+    bool operator <(const Airport& airport) const;
 };
 
 

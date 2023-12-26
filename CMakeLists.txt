@@ -13,4 +13,6 @@ add_executable(AED2324_proj2 src/main.cpp
         src/Airline.h
         src/Flight.cpp
         src/Flight.h
-        src/Flight.h)
+        src/Flight.h
+        src/Data.cpp
+        src/Data.h)

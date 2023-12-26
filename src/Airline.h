@@ -1,7 +1,3 @@
-//
-// Created by Gonçalo Carvalho on 26/12/2023.
-//
-
 #ifndef AED2324_PROJ2_AIRLINE_H
 #define AED2324_PROJ2_AIRLINE_H
 
@@ -17,11 +13,12 @@ private:
     string country;
 public:
     Airline();
-    Airline(string code, string name, string callsign, string country);
+    explicit Airline(string code, string name = "", string callsign = "", string country = "");
     string getCode();
     string getName();
     string getCallsign();
     string getCountry();
+    bool operator <(const Airline& airline) const;
 };
 
 

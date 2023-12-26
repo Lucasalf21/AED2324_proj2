@@ -1,7 +1,3 @@
-//
-// Created by up202204873 on 04-12-2023.
-//
-
 #include "Graph.h"
 template <class T>
 Vertex<T>::Vertex(T in): info(in) {}

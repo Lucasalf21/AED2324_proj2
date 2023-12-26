@@ -1,7 +1,3 @@
-//
-// Created by Gonçalo Carvalho on 26/12/2023.
-//
-
 #include "Airline.h"
 
 #include <utility>
@@ -34,4 +30,8 @@ Airline::Airline() {    // default constructor
     this->name = "";
     this->callsign = "";
     this->country = "";
+}
+
+bool Airline::operator<(const Airline &airline) const {
+    return this->code < airline.code;
 }
