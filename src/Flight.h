@@ -2,17 +2,25 @@
 // Created by Gonçalo Carvalho on 26/12/2023.
 //
 
-#ifndef AED2324_PROJ2_FLIGHTS_H
-#define AED2324_PROJ2_FLIGHTS_H
+#ifndef AED2324_PROJ2_FLIGHT_H
+#define AED2324_PROJ2_FLIGHT_H
 
-#include "Airports.h"
-#include "Airlines.h"
+#include "Airport.h"
+#include "Airline.h"
 
 using namespace std;
 
-class Flights {
-    
+class Flight {
+private:
+    Airport source;
+    Airport destination;
+    Airline airline;
+public:
+    Flight(Airport source, Airport destination, Airline airline);
+    Airport getSource();
+    Airport getDestination();
+    Airline getAirline();
 };
 
 
-#endif //AED2324_PROJ2_FLIGHTS_H
+#endif //AED2324_PROJ2_FLIGHT_H
