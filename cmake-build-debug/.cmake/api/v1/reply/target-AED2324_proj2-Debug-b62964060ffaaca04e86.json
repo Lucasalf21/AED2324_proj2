@@ -2,7 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "AED2324_proj2"
+			"path" : "AED2324_proj2.exe"
+		},
+		{
+			"path" : "AED2324_proj2.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -66,12 +69,16 @@
 			{
 				"fragment" : "",
 				"role" : "flags"
+			},
+			{
+				"fragment" : "-lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32",
+				"role" : "libraries"
 			}
 		],
 		"language" : "CXX"
 	},
 	"name" : "AED2324_proj2",
-	"nameOnDisk" : "AED2324_proj2",
+	"nameOnDisk" : "AED2324_proj2.exe",
 	"paths" : 
 	{
 		"build" : ".",
