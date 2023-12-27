@@ -67,6 +67,52 @@ vector<string> Graph::bfs(Vertex *source, Vertex *dest) {
     return {};
 }
 
+vector<pair<string, double>> Graph::dijkstra(Vertex* source, Vertex* dest){
+    vector<pair<string, double>> res;
+
+    for (auto v : vertexSet){
+        v->visited = false;
+        v->distance = DBL_MAX;
+    }
+
+    priority_queue<Vertex*, vector<Vertex*>, greater<>> pq;
+    Vertex* current = findVertex(source->info);
+    current->distance = 0;
+    pq.push(current);
+
+    unordered_map<Vertex*, Vertex*> parentMap;
+
+    while (!pq.empty()){
+        current = pq.top();
+        pq.pop();
+        current->visited = true;
+
+        if (current == dest){
+            while(current != nullptr){
+                res.push_back({current->info->getCode(), current->distance});
+                current = parentMap[current];
+            }
+            reverse(res.begin(), res.end());
+            return res;
+        }
+
+        for (auto& e : current->adj){
+            Vertex* w = e.dest;
+            if (!w->visited){
+                double newDistance = current->distance + e.weight;
+                if (newDistance < w->distance){
+                    w->distance = newDistance;
+                    parentMap[w] = current;
+                    pq.push(w);
+                }
+            }
+        }
+    }
+
+
+    return {};
+}
+
 Vertex* Graph::findVertex(Airport* a) {
     for (auto vertex : vertexSet){
         if (vertex->info == a){
