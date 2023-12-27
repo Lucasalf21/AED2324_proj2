@@ -4,6 +4,7 @@
 
 #include "Menu.h"
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
@@ -79,22 +80,22 @@ void Menu::statistics() {
                 globalNumFlights();
                 break;
             case 4:
-                flightsFromAirport(); //TODO
+                flightsFromAirport();
                 break;
             case 5:
-                flightsFromAirline(); //TODO
+                flightsFromAirline();
                 break;
             case 6:
-                numberOfFlightsAirport(); //TODO
+                numberOfFlightsAirport();
                 break;
             case 7:
-                numberOfFlightsAirline(); //TODO
+                numberOfFlightsAirline();
                 break;
             case 8:
-                countriesFliesToAirport(); //TODO
+                countriesFliesToAirport();
                 break;
             case 9:
-                countriesFliesToCity(); //TODO
+                countriesFliesToCity();
                 break;
             case 10:
                 destinationsAvailableAirport(); //TODO
@@ -142,27 +143,111 @@ void Menu::globalNumFlights() {
 }
 
 void Menu::flightsFromAirport() {
-
+    cout << endl << "Enter the desired airport's code: " << endl;
+    string sourceCode;
+    cin >> sourceCode;
+    for(auto flight : data->getFlights()) {
+        if(flight->getSource()->getCode() == sourceCode) {
+            flight->printFlight();
+        }
+    }
 }
 
 void Menu::flightsFromAirline() {
-
+    cout << endl << "Enter the desired airline's code: " << endl;
+    string airlineCode;
+    cin >> airlineCode;
+    for(auto flight : data->getFlights()) {
+        if(flight->getAirline()->getCode() == airlineCode) {
+            flight->printFlight();
+        }
+    }
+    cout << endl;
 }
 
 void Menu::numberOfFlightsAirport() {
-
+    cout << endl << "Enter the desired airport's code: " << endl;
+    string sourceCode;
+    cin >> sourceCode;
+    int counter = 0;
+    for(auto flight : data->getFlights()) {
+        if(flight->getSource()->getCode() == sourceCode) {
+            counter++;
+        }
+    }
+    cout << endl << "Number of flights: " << counter << endl << endl;
 }
 
 void Menu::numberOfFlightsAirline() {
-
+    cout << endl << "Enter the desired airline's code: " << endl;
+    string airlineCode;
+    cin >> airlineCode;
+    int counter = 0;
+    for(auto flight : data->getFlights()) {
+        if(flight->getAirline()->getCode() == airlineCode) {
+            counter++;
+        }
+    }
+    cout << endl << "Number of flights: " << counter << endl << endl;
 }
 
 void Menu::countriesFliesToAirport() {
+    cout << endl << "Enter the desired airport's code: " << endl;
+    string sourceCode;
+    cin >> sourceCode;
+    vector<string> countries;
+    for(auto flight : data->getFlights()) {
+        if(flight->getSource()->getCode() == sourceCode && std::find(countries.begin(), countries.end(), flight->getDestination()->getCountry()) == countries.end()) {
+            countries.push_back(flight->getDestination()->getCountry());
+        }
+    }
 
+    sort(countries.begin(), countries.end());
+    cout << endl << "Countries: " << endl;
+
+    for(auto country : countries) {
+        cout << country << endl;
+    }
+
+    cout << endl;
 }
 
 void Menu::countriesFliesToCity() {
+    cout << endl << "Enter the desired city's name: " << endl;
+    string cityName;
+    cin >> cityName;
+    string cityCountry = checkCountry(cityName);
+    vector<string> countries;
+    for(auto flight : data->getFlights()) {
+        if(flight->getSource()->getCountry() == cityCountry && flight->getSource()->getCity() == cityName
+        && std::find(countries.begin(), countries.end(), flight->getDestination()->getCountry()) == countries.end()) {
+            countries.push_back(flight->getDestination()->getCountry());
+        }
+    }
 
+    std::sort(countries.begin(), countries.end());
+    cout << endl << "Countries: " << endl;
+
+    for(auto country : countries) {
+        cout << country << endl;
+    }
+
+    cout << endl;
+}
+
+string Menu::checkCountry(string cityName) {
+    string countryName;
+    for(auto airport : data->getAirports()) {
+        if(airport->getCity() == cityName) {
+            if(countryName.empty()) countryName = airport->getCountry();
+            if(countryName != airport->getCountry()){
+                cout << "There are multiple countries with the same city name. Please enter the country name: " << endl;
+                cin >> countryName;
+                return countryName;
+            }
+        }
+    }
+    return countryName;
 }
 
 void Menu::destinationsAvailableAirport() {
@@ -180,3 +265,4 @@ void Menu::maximumTrip() {
 void Menu::topAirports() {
 
 }
+
