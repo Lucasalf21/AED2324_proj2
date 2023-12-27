@@ -20,4 +20,6 @@ add_executable(AED2324_proj2 src/main.cpp
         src/Data.h
         src/Filereader.cpp
         src/Filereader.h
+        src/GraphLoader.h
+        src/GraphLoader.cpp
 )

@@ -34,3 +34,15 @@ unsigned long Data::numberAirlines() {
 unsigned long Data::numberFlights() {
     return flights.size();
 }
+
+set<Airport*> Data::getAirports() {
+    return airports;
+}
+
+set<Airline*> Data::getAirlines() {
+    return airlines;
+}
+
+set<Flight*> Data::getFlights() {
+    return flights;
+}

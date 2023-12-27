@@ -11,7 +11,6 @@
 using namespace std;
 class Data {
 private:
-    Graph airportsGraph;
     set<Airline*> airlines;
     set<Airport*> airports;
     set<Flight*> flights;
@@ -26,6 +25,9 @@ public:
     unsigned long numberAirports();
     unsigned long numberAirlines();
     unsigned long numberFlights();
+    set<Airport*> getAirports();
+    set<Airline*> getAirlines();
+    set<Flight*> getFlights();
 };
 
 

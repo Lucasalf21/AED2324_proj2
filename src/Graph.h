@@ -17,7 +17,7 @@ struct Edge{
     Airline* airline;
     double weight;
 
-    Edge(Vertex* d,Airline* a, double w) : dest(d), airline(a), weight(w) {};
+    Edge(Vertex* d, Airline* a, double w) : dest(d), airline(a), weight(w) {};
 };
 
 struct Vertex{
@@ -36,7 +36,8 @@ public:
     bool addEdge(Vertex* source, Vertex* dest, Airline* airline);
     vector<Vertex*> getVertexSet();
     vector<string> bfs(Vertex* source, Vertex* dest);
-    Vertex* findVertex(Vertex* v);
+    vector<pair<string, double>> dijkstra(Vertex* source, Vertex* dest);
+    Vertex* findVertex(Airport* v);
 };
 
 #endif //AED2324_PROJ2_GRAPH_H

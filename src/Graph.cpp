@@ -3,7 +3,7 @@
 
 bool Graph::addVertex(Airport *airport) {
     Vertex* newAirport = new Vertex(airport);
-    if (findVertex(newAirport) != NULL){
+    if (findVertex(newAirport->info) != NULL){
         return false;
     }
     vertexSet.push_back(newAirport);
@@ -11,7 +11,7 @@ bool Graph::addVertex(Airport *airport) {
 }
 
 bool Graph::addEdge(Vertex *source, Vertex *dest, Airline *airline) {
-    if (findVertex(source) != NULL && findVertex(dest) != NULL) {
+    if (findVertex(source->info) != NULL && findVertex(dest->info) != NULL) {
         Airport* airport1 = source->info;
         Airport* airport2 = dest->info;
         double w = airport1->calculateDistance(airport2);
@@ -25,8 +25,6 @@ bool Graph::addEdge(Vertex *source, Vertex *dest, Airline *airline) {
 vector<Vertex *> Graph::getVertexSet() {
     return vertexSet;
 }
-
-
 
 bool vertexInAdj(vector<Edge> adj, Vertex* target){
     for (auto& e : adj){
@@ -46,7 +44,7 @@ vector<string> Graph::bfs(Vertex *source, Vertex *dest) {
     }
 
     queue<Vertex *> q;
-    Vertex *v = findVertex(source);
+    Vertex *v = findVertex(source->info);
     v->visited = true;
     q.push(v);
 
@@ -73,9 +71,9 @@ vector<string> Graph::bfs(Vertex *source, Vertex *dest) {
     return notFound;
 }
 
-Vertex* Graph::findVertex(Vertex *v) {
+Vertex* Graph::findVertex(Airport* a) {
     for (auto vertex : vertexSet){
-        if (vertex == v){
+        if (vertex->info == a){
             return vertex;
         }
     }
