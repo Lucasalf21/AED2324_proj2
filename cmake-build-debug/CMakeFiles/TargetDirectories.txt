@@ -1,3 +1,0 @@
-D:/Miguel/Aed/AED2324_proj2/cmake-build-debug/CMakeFiles/AED2324_proj2.dir
-D:/Miguel/Aed/AED2324_proj2/cmake-build-debug/CMakeFiles/edit_cache.dir
-D:/Miguel/Aed/AED2324_proj2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
