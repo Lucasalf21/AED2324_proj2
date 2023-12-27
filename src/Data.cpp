@@ -16,11 +16,19 @@ void Data::newFlight(Flight *flight) {
 }
 
 Airport *Data::getAirport(string code) {
-    return *airports.find(new Airport(code));
+    for(auto airport : airports) {
+        if(airport->getCode() == code) {
+            return airport;
+        }
+    }
 }
 
 Airline *Data::getAirline(string code) {
-    return *airlines.find(new Airline(code));
+    for(auto airline : airlines) {
+        if(airline->getCode() == code) {
+            return airline;
+        }
+    }
 }
 
 unsigned long Data::numberAirports() {
@@ -35,54 +43,14 @@ unsigned long Data::numberFlights() {
     return flights.size();
 }
 
-// Airports Graph
-
-void Data::addAirportConnection(Airport *source, Airport *destination) {
-    airportsGraph.addVertex(source);
-    airportsGraph.addVertex(destination);
-    airportsGraph.addEdge(source, destination);
+set<Airport*> Data::getAirports() {
+    return airports;
 }
 
-bool Data::removeAirportConnection(Airport *source, Airport *destination) {
-    return airportsGraph.removeEdge(source, destination);
+set<Airline*> Data::getAirlines() {
+    return airlines;
 }
 
-vector<Airport *> Data::getConnectedAirports(Airport *airport) {
-    vector<Airport*> connectedAirports;
-    auto adjEdges = airportsGraph.findVertex(airport)->getAdj();
-    for (const auto& edge : adjEdges) {
-        connectedAirports.push_back(edge.getDest()->getInfo());
-    }
-
-    return connectedAirports;
-}
-
-bool Data::hasAirportConnection(Airport *source, Airport *destination) {
-    return airportsGraph.hasEdge(source, destination);
-}
-
-// Airlines Graph
-
-void Data::addAirlineConnection(Airline* source, Airline* destination) {
-    airlinesGraph.addVertex(source);
-    airlinesGraph.addVertex(destination);
-    airlinesGraph.addEdge(source, destination);
-}
-
-bool Data::removeAirlineConnection(Airline* source, Airline* destination) {
-    return airlinesGraph.removeEdge(source, destination);
-}
-
-vector<Airline*> Data::getConnectedAirlines(Airline* airline) {
-    vector<Airline*> connectedAirlines;
-    auto adjAirlines = airlinesGraph.findVertex(airline)->getAdj();
-    for (const auto& edge : adjAirlines) {
-        connectedAirlines.push_back(edge.getDest()->getInfo());
-    }
-
-    return connectedAirlines;
-}
-
-bool Data::hasAirlineConnection(Airline* source, Airline* destination) {
-    return airlinesGraph.hasEdge(source, destination);
+set<Flight*> Data::getFlights() {
+    return flights;
 }

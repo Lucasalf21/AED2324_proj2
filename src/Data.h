@@ -11,21 +11,12 @@
 using namespace std;
 class Data {
 private:
-    Graph<Airport*> airportsGraph;
-    Graph<Airline*> airlinesGraph;
     set<Airline*> airlines;
     set<Airport*> airports;
     set<Flight*> flights;
 public:
     Data();
-    void addAirportConnection(Airport* source, Airport* destination);
-    bool removeAirportConnection(Airport* source, Airport* destination);
-    vector<Airport*> getConnectedAirports(Airport* airport);
-    bool hasAirportConnection(Airport* source, Airport* destination);
-    void addAirlineConnection(Airline* source, Airline* destination);
-    bool removeAirlineConnection(Airline* source, Airline* destination);
-    vector<Airline*> getConnectedAirlines(Airline* airline);
-    bool hasAirlineConnection(Airline* source, Airline* destination);
+
     void newAirport(Airport* airport);
     void newAirline(Airline* airline);
     void newFlight(Flight* flight);
@@ -34,6 +25,9 @@ public:
     unsigned long numberAirports();
     unsigned long numberAirlines();
     unsigned long numberFlights();
+    set<Airport*> getAirports();
+    set<Airline*> getAirlines();
+    set<Flight*> getFlights();
 };
 
 
