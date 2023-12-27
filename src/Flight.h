@@ -16,6 +16,7 @@ public:
     Airport* getSource();
     Airport* getDestination();
     Airline* getAirline();
+    void printFlight();
 };
 
 

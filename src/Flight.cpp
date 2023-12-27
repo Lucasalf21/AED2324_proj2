@@ -1,6 +1,7 @@
 #include "Flight.h"
 
 #include <utility>
+#include <iostream>
 
 Flight::Flight(Airport* source, Airport* destination, Airline* airline) {
     this->source = source;
@@ -18,4 +19,11 @@ Airport* Flight::getDestination() {
 
 Airline* Flight::getAirline() {
     return airline;
+}
+
+void Flight::printFlight() {
+    cout << source->getCountry() << " - " << source->getCity() << " (" << source->getName() << " - " << source->getCode() << ")"
+         << " --> "
+         << destination->getCountry() << " - " << destination->getCity() << " (" << destination->getName() << " - " << destination->getCode() << ")"
+         << " | " << airline->getName() << " (" << airline->getCode() << ")" << endl;
 }

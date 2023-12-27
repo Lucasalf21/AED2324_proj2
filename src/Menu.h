@@ -25,10 +25,12 @@ public:
     void numberOfFlightsAirline();
     void countriesFliesToAirport();
     void countriesFliesToCity();
+    string checkCountry(string cityName); // auxiliary function
     void destinationsAvailableAirport();
     void reachableDestinationsAirport();
     void maximumTrip();
     void topAirports();
+
 };
 
 
