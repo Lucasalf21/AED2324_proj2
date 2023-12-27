@@ -1,4 +1,6 @@
 #include "Graph.h"
+#include <unordered_map>
+#include <algorithm>
 
 
 bool Graph::addVertex(Airport *airport) {
@@ -26,16 +28,6 @@ vector<Vertex *> Graph::getVertexSet() {
     return vertexSet;
 }
 
-bool vertexInAdj(vector<Edge> adj, Vertex* target){
-    for (auto& e : adj){
-        auto d = e.dest;
-        if (d == target){
-            return true;
-        }
-    }
-    return false;
-}
-
 vector<string> Graph::bfs(Vertex *source, Vertex *dest) {
     vector<string> res;
 
@@ -44,31 +36,35 @@ vector<string> Graph::bfs(Vertex *source, Vertex *dest) {
     }
 
     queue<Vertex *> q;
-    Vertex *v = findVertex(source->info);
-    v->visited = true;
-    q.push(v);
+    Vertex* current = findVertex(source->info);
+    current->visited = true;
+    q.push(current);
+    unordered_map<Vertex*, Vertex*> parentMap;
 
-    while (!q.empty()) {
-        v = q.front();
+    while (!q.empty()){
+        current = q.front();
         q.pop();
-        res.push_back(v->info->getCode());
 
-        if (vertexInAdj(v->adj, dest)){
-            res.push_back(dest->info->getCode());
+        if (current == dest){
+            while (current != nullptr){
+                res.push_back(current->info->getCode());
+                current = parentMap[current];
+            }
+            reverse(res.begin(), res.end());
             return res;
         }
 
-        for (auto& e : v->adj){
-            auto w = e.dest;
+        for (auto& e : current->adj){
+            Vertex* w = e.dest;
             if (!w->visited){
                 w->visited = true;
+                parentMap[w] = current;
                 q.push(w);
             }
         }
     }
 
-    vector<string> notFound;
-    return notFound;
+    return {};
 }
 
 Vertex* Graph::findVertex(Airport* a) {
