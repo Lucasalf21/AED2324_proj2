@@ -13,6 +13,6 @@ int main() {
     GraphLoader graphLoader;
     graphLoader.loadAirports(g, data);
     graphLoader.loadFlights(g, data);
-    Menu menu = Menu(data);
+    Menu menu = Menu(data, g);
     return 0;
 }

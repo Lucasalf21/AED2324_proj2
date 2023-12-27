@@ -10,8 +10,9 @@
 class Menu {
 public:
     Data* data;
+    Graph g;
 
-    Menu(Data* data);
+    Menu(Data* data, Graph graph);
     void statistics();
     void bestFlightOption();
     void searchWithFilters();
