@@ -21,6 +21,7 @@ Airport *Data::getAirport(string code) {
             return airport;
         }
     }
+    return nullptr;
 }
 
 Airline *Data::getAirline(string code) {
@@ -29,6 +30,7 @@ Airline *Data::getAirline(string code) {
             return airline;
         }
     }
+    return nullptr;
 }
 
 unsigned long Data::numberAirports() {
