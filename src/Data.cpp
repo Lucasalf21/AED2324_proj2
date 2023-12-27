@@ -16,11 +16,19 @@ void Data::newFlight(Flight *flight) {
 }
 
 Airport *Data::getAirport(string code) {
-    return *airports.find(new Airport(code));
+    for(auto airport : airports) {
+        if(airport->getCode() == code) {
+            return airport;
+        }
+    }
 }
 
 Airline *Data::getAirline(string code) {
-    return *airlines.find(new Airline(code));
+    for(auto airline : airlines) {
+        if(airline->getCode() == code) {
+            return airline;
+        }
+    }
 }
 
 unsigned long Data::numberAirports() {

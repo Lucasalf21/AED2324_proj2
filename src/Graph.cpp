@@ -11,7 +11,7 @@ bool Graph::addVertex(Airport *airport) {
 }
 
 bool Graph::addEdge(Vertex *source, Vertex *dest, Airline *airline) {
-    if (findVertex(source->info) != NULL && findVertex(dest->info) != NULL) {
+    if (findVertex(source->info) != nullptr && findVertex(dest->info) != nullptr){
         Airport* airport1 = source->info;
         Airport* airport2 = dest->info;
         double w = airport1->calculateDistance(airport2);
@@ -77,5 +77,5 @@ Vertex* Graph::findVertex(Airport* a) {
             return vertex;
         }
     }
-    return NULL;
+    return nullptr;
 }
