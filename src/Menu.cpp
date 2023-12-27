@@ -194,7 +194,6 @@ void Menu::numberOfFlightsAirline() {
 void Menu::countriesFliesToAirport() {
     cout << endl << "Enter the desired airport's code: " << endl;
     string sourceCode;
-    cin >> sourceCode;
     vector<string> countries;
     for(auto flight : data->getFlights()) {
         if(flight->getSource()->getCode() == sourceCode && std::find(countries.begin(), countries.end(), flight->getDestination()->getCountry()) == countries.end()) {
@@ -215,7 +214,8 @@ void Menu::countriesFliesToAirport() {
 void Menu::countriesFliesToCity() {
     cout << endl << "Enter the desired city's name: " << endl;
     string cityName;
-    cin >> cityName;
+    cin.ignore();
+    getline(cin, cityName);
     string cityCountry = checkCountry(cityName);
     vector<string> countries;
     for(auto flight : data->getFlights()) {
@@ -242,7 +242,7 @@ string Menu::checkCountry(string cityName) {
             if(countryName.empty()) countryName = airport->getCountry();
             if(countryName != airport->getCountry()){
                 cout << "There are multiple countries with the same city name. Please enter the country name: " << endl;
-                cin >> countryName;
+                getline(cin, countryName);
                 return countryName;
             }
         }
