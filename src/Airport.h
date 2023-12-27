@@ -21,7 +21,9 @@ public:
     string getCountry();
     float getLatitude() const;
     float getLongitude() const;
+    double calculateDistance(Airport* dest);
     bool operator <(const Airport& airport) const;
+    bool operator =(const Airport& airport);
 };
 
 
