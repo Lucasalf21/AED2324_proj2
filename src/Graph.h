@@ -8,6 +8,7 @@
 #include <stack>
 #include <list>
 #include <cfloat>
+#include <set>
 #include "Airport.h"
 #include "Airline.h"
 
@@ -34,12 +35,12 @@ struct Vertex{
 };
 
 class Graph{
-    vector<Vertex*> vertexSet;
+    set<Vertex*> vertexSet;
 
 public:
     bool addVertex(Airport* airport);
     bool addEdge(Vertex* source, Vertex* dest, Airline* airline);
-    vector<Vertex*> getVertexSet();
+    set<Vertex*> getVertexSet();
     vector<string> bfs(Vertex* source, Vertex* dest);
     vector<pair<string, double>> dijkstra(Vertex* source, Vertex* dest);
     Vertex* findVertex(Airport* v);

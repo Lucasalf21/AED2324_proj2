@@ -8,7 +8,7 @@
 
 using namespace std;
 
-Menu::Menu(Data* data, Graph graph){
+Menu::Menu(Data* data, Graph* graph){
     this->data = data;
     int choice = 1;
 

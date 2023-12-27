@@ -12,7 +12,7 @@ public:
     Data* data;
     Graph g;
 
-    Menu(Data* data, Graph graph);
+    Menu(Data* data, Graph* graph);
     void statistics();
     void bestFlightOption();
     void searchWithFilters();

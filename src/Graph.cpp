@@ -5,10 +5,10 @@
 
 bool Graph::addVertex(Airport *airport) {
     Vertex* newAirport = new Vertex(airport);
-    if (findVertex(newAirport->info) != NULL){
+    if (findVertex(newAirport->info) != nullptr){
         return false;
     }
-    vertexSet.push_back(newAirport);
+    vertexSet.insert(newAirport);
     return true;
 }
 
@@ -24,7 +24,7 @@ bool Graph::addEdge(Vertex *source, Vertex *dest, Airline *airline) {
     return false;
 }
 
-vector<Vertex *> Graph::getVertexSet() {
+set<Vertex *> Graph::getVertexSet() {
     return vertexSet;
 }
 
@@ -114,8 +114,11 @@ vector<pair<string, double>> Graph::dijkstra(Vertex* source, Vertex* dest){
 }
 
 Vertex* Graph::findVertex(Airport* a) {
+    if(this->vertexSet.empty()){
+        return nullptr;
+    }
     for (auto vertex : vertexSet){
-        if (vertex->info == a){
+        if (vertex->info->getCode() == a->getCode()){
             return vertex;
         }
     }

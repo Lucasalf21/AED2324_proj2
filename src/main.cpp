@@ -6,7 +6,7 @@
 
 int main() {
     cout << "Welcome to the Flight Management System!" << endl;
-    Graph g;
+    Graph* g = new Graph();
     Data* data = new Data();
     auto* filereader = new Filereader(data);
     filereader->read();
