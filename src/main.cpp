@@ -5,6 +5,7 @@
 #include "GraphLoader.h"
 
 int main() {
+    cout << "Welcome to the Flight Management System!" << endl;
     Graph g;
     Data* data = new Data();
     auto* filereader = new Filereader(data);

@@ -7,6 +7,7 @@
 #include <queue>
 #include <stack>
 #include <list>
+#include <float.h>
 #include "Airport.h"
 #include "Airline.h"
 
@@ -24,8 +25,12 @@ struct Vertex{
     Airport* info;
     std::vector<Edge> adj;
     bool visited;
+    double distance;
+    bool operator >(const Vertex& v) const{
+        return distance > v.distance;
+    }
 
-    Vertex(Airport* in) : info(in), adj({}), visited(false) {};
+    Vertex(Airport* in) : info(in), adj({}), visited(false), distance(DBL_MAX) {};
 };
 
 class Graph{
