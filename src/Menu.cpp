@@ -132,19 +132,31 @@ void Menu::bestFlightOption() {
     string dest;
     cout << "Choose origin aiport: ";
     cin >> source;
+    Airport* a1 = data->getAirport(source);
+    if (a1 == nullptr){
+        cout << "Airport not found!" << endl;
+        return;
+    }
+
     cout << "Choose destination airport: ";
     cin >> dest;
-    Airport* s = data->getAirport(source);
-    Airport* d = data->getAirport(dest);
-    Vertex* v1 = g->findVertex(s);
-    Vertex* v2 = g->findVertex(d);
-    vector<pair<string, double>> bestRoute = g->dijkstra(v1, v2);
-    cout << bestRoute[0].first << ' ';
-    for (int i = 1;  i < bestRoute.size() - 2; i++){
-        cout << bestRoute[i].first << ' ';
+    Airport* a2 = data->getAirport(dest);
+    if (a2 == nullptr){
+        cout << "Airport not found!" << endl;
+        return;
     }
-    cout << bestRoute[bestRoute.size() - 1].first << endl;
-    cout << bestRoute[bestRoute.size() - 1].second << " KM" << endl;
+
+    Vertex* s = g->findVertex(a1);
+    Vertex* d = g->findVertex(a2);
+    vector<pair<string, double>> bestRoute = g->dijkstra(s, d);
+
+    cout << endl << "The best route from " << source << " to " << dest << " goes through:" << endl << endl;
+    cout << bestRoute[0].first << "->";
+    for (int i = 1;  i < bestRoute.size() - 2; i++){
+        cout << bestRoute[i].first << "->";
+    }
+    cout << bestRoute[bestRoute.size() - 1].first << endl << endl;
+    cout << "And travels a distance of " << bestRoute[bestRoute.size() - 1].second << " KM" << endl;
 }
 
 void Menu::searchWithFilters() {

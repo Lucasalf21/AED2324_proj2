@@ -75,13 +75,13 @@ vector<pair<string, double>> Graph::dijkstra(Vertex *source, Vertex *dest) {
         v->distance = DBL_MAX;
     }
 
-    set<pair<Vertex*, double>> priorityQueue;
+    set<pair<double, Vertex*>> priorityQueue;
     source->distance = 0;
-    priorityQueue.insert({source, source->distance});
+    priorityQueue.insert({source->distance, source});
     unordered_map<Vertex*, Vertex*> parentMap;
 
     while (!priorityQueue.empty()) {
-        Vertex* current = priorityQueue.begin()->first;
+        Vertex* current = priorityQueue.begin()->second;
         priorityQueue.erase(priorityQueue.begin());
 
         for (auto& e : current->adj) {
@@ -89,9 +89,9 @@ vector<pair<string, double>> Graph::dijkstra(Vertex *source, Vertex *dest) {
             double newDistance = current->distance + e.weight;
 
             if (newDistance < w->distance) {
-                priorityQueue.erase({w, w->distance});
+                priorityQueue.erase({w->distance, w});
                 w->distance = newDistance;
-                priorityQueue.insert({w, w->distance});
+                priorityQueue.insert({w->distance, w});
 
                 parentMap[w] = current;
             }
