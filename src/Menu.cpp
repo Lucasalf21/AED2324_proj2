@@ -380,12 +380,6 @@ void Menu::DFSCountReachableDestinations(Airport* currentAirport, int currentSto
     // Process the current airport as a reachable destination
     reachableCount++;
 
-    // Get adjacent airports and continue DFS
-    vector<Airport*> connectedAirports = data->getConnectedAirports(currentAirport);
-    for (Airport* nextAirport : connectedAirports) {
-        DFSCountReachableDestinations(nextAirport, currentStops + 1, maxStops, choice, reachableCount);
-    }
-
     // Output the type of destination based on user's choice
     switch (choice) {
         case 1:
@@ -399,6 +393,16 @@ void Menu::DFSCountReachableDestinations(Airport* currentAirport, int currentSto
             break;
         default:
             cout << "Invalid choice. Exiting..." << endl;
+            return;
+    }
+
+    // Get connected airports and continue DFS
+    Vertex* currentVertex = g->findVertex(currentAirport);
+    if (currentVertex != nullptr) {
+        for (Edge& edge : currentVertex->adj) {
+            Airport* nextAirport = edge.dest->info;
+            DFSCountReachableDestinations(nextAirport, currentStops + 1, maxStops, choice, reachableCount);
+        }
     }
 }
 
