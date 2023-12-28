@@ -105,17 +105,17 @@ void Menu::statistics() {
                 countriesFliesToCity();
                 break;
             case 10:
-                destinationsAvailableAirport(); //TODO
+                destinationsAvailableAirport(); //Fiz mas nao consegui testar
                 break;
             case 11:
-                reachableDestinationsAirport(); //TODO
+                reachableDestinationsAirport(); //Fiz mas nao consegui testar
                 break;
             case 12:
                 maximumTrip(); //? TODO
                 break;
             case 13:
                 topAirports(); //TODO
-
+                break;
             case 69:
                 return;
             case 0:
@@ -286,11 +286,120 @@ string Menu::checkCountry(string cityName) {
 }
 
 void Menu::destinationsAvailableAirport() {
+    string airportCode;
+    cout << endl << "Enter the desired airport's code: " << endl;
+    cin >> airportCode;
+    Airport* airport = data->getAirport(airportCode);
+    if(airport == nullptr) {
+        cout << "Airport not found!" << endl;
+        return;
+    }
 
+    set<string> uniqueDestinations;  // Use a set to keep track of unique destinations
+
+    cout << "Choose the type of destinations:" << endl;
+    cout << "1. Airports" << endl;
+    cout << "2. Cities" << endl;
+    cout << "3. Countries" << endl;
+
+    int choice;
+    cout << "Enter your choice (1-3): ";
+    cin >> choice;
+
+    cout << endl << "Destinations available: " << endl;
+    for(auto flight : data->getFlights()) {
+        if(flight->getSource()->getCode() == airportCode) {
+            string destination;
+            switch (choice) {
+                case 1:
+                    destination = flight->getDestination()->getCode();  // Airports
+                    break;
+                case 2:
+                    destination = flight->getDestination()->getCity();  // Cities
+                    break;
+                case 3:
+                    destination = flight->getDestination()->getCountry();  // Countries
+                    break;
+                default:
+                    cout << "Invalid choice. Exiting..." << endl;
+                    return;
+            }
+
+            // Add the destination to the set
+            uniqueDestinations.insert(destination);
+        }
+    }
+
+    // Print the unique destinations
+    for(const auto& destination : uniqueDestinations) {
+        cout << destination << endl;
+    }
+
+    // Print the total number of unique destinations
+    cout << "Total number of unique destinations: " << uniqueDestinations.size() << endl;
 }
 
 void Menu::reachableDestinationsAirport() {
+    string airportCode;
+    cout << endl << "Enter the desired airport's code: " << endl;
+    cin >> airportCode;
+    Airport* airport = data->getAirport(airportCode);
+    if (airport == nullptr) {
+        cout << "Airport not found!" << endl;
+        return;
+    }
 
+    int maxStops;
+    cout << "Enter the maximum number of stops: ";
+    cin >> maxStops;
+
+    int reachableCount = 0;
+
+    // Choose the type of destinations
+    cout << "Choose the type of destinations:" << endl;
+    cout << "1. Airports" << endl;
+    cout << "2. Cities" << endl;
+    cout << "3. Countries" << endl;
+
+    int choice;
+    cout << "Enter your choice (1-3): ";
+    cin >> choice;
+
+    // Perform DFS to count reachable destinations within maxStops
+    DFSCountReachableDestinations(airport, 0, maxStops, choice, reachableCount);
+
+    cout << endl << "Number of reachable destinations within " << maxStops << " stops: " << reachableCount << endl;
+}
+
+// DFS helper function to count reachable destinations
+void Menu::DFSCountReachableDestinations(Airport* currentAirport, int currentStops, int maxStops, int choice, int& reachableCount) {
+    if (currentStops > maxStops) {
+        return;  // Stop DFS if exceeding maximum stops
+    }
+
+    // Process the current airport as a reachable destination
+    reachableCount++;
+
+    // Get adjacent airports and continue DFS
+    vector<Airport*> connectedAirports = data->getConnectedAirports(currentAirport);
+    for (Airport* nextAirport : connectedAirports) {
+        DFSCountReachableDestinations(nextAirport, currentStops + 1, maxStops, choice, reachableCount);
+    }
+
+    // Output the type of destination based on user's choice
+    switch (choice) {
+        case 1:
+            cout << currentAirport->getCode() << " ";  // Airports
+            break;
+        case 2:
+            cout << currentAirport->getCity() << " ";  // Cities
+            break;
+        case 3:
+            cout << currentAirport->getCountry() << " ";  // Countries
+            break;
+        default:
+            cout << "Invalid choice. Exiting..." << endl;
+    }
 }
 
 void Menu::maximumTrip() {
