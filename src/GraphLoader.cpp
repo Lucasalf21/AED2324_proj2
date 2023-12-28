@@ -4,16 +4,16 @@
 
 #include "GraphLoader.h"
 
-void GraphLoader::loadAirports(Graph& g, Data* data) {
+void GraphLoader::loadAirports(Graph* g, Data* data) {
     for (auto a : data->getAirports()){
-        g.addVertex(a);
+        g->addVertex(a);
     }
 }
 
-void GraphLoader::loadFlights(Graph &g, Data* data) {
+void GraphLoader::loadFlights(Graph *g, Data* data) {
     for (auto f : data->getFlights()){
-        Vertex* source = g.findVertex(f->getSource());
-        Vertex* dest = g.findVertex(f->getDestination());
-        g.addEdge(source, dest, f->getAirline());
+        Vertex* source = g->findVertex(f->getSource());
+        Vertex* dest = g->findVertex(f->getDestination());
+        g->addEdge(source, dest, f->getAirline());
     }
 }

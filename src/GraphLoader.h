@@ -11,8 +11,8 @@
 
 class GraphLoader {
 public:
-    void loadAirports(Graph& g, Data* data);
-    void loadFlights(Graph& g, Data* data);
+    void loadAirports(Graph* g, Data* data);
+    void loadFlights(Graph* g, Data* data);
 };
 
 

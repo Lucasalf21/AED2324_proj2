@@ -7,7 +7,8 @@
 #include <queue>
 #include <stack>
 #include <list>
-#include <float.h>
+#include <cfloat>
+#include <set>
 #include "Airport.h"
 #include "Airline.h"
 
@@ -26,20 +27,20 @@ struct Vertex{
     std::vector<Edge> adj;
     bool visited;
     double distance;
-    bool operator >(const Vertex& v) const{
-        return distance > v.distance;
+    bool operator <(Vertex* v){
+        return this->distance < v->distance;
     }
 
     Vertex(Airport* in) : info(in), adj({}), visited(false), distance(DBL_MAX) {};
 };
 
 class Graph{
-    vector<Vertex*> vertexSet;
+    set<Vertex*> vertexSet;
 
 public:
     bool addVertex(Airport* airport);
     bool addEdge(Vertex* source, Vertex* dest, Airline* airline);
-    vector<Vertex*> getVertexSet();
+    set<Vertex*> getVertexSet();
     vector<string> bfs(Vertex* source, Vertex* dest);
     vector<pair<string, double>> dijkstra(Vertex* source, Vertex* dest);
     Vertex* findVertex(Airport* v);

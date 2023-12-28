@@ -1,14 +1,15 @@
 #include "Graph.h"
 #include <unordered_map>
 #include <algorithm>
+#include <iostream>
 
 
 bool Graph::addVertex(Airport *airport) {
     Vertex* newAirport = new Vertex(airport);
-    if (findVertex(newAirport->info) != NULL){
+    if (findVertex(newAirport->info) != nullptr){
         return false;
     }
-    vertexSet.push_back(newAirport);
+    vertexSet.insert(newAirport);
     return true;
 }
 
@@ -24,7 +25,7 @@ bool Graph::addEdge(Vertex *source, Vertex *dest, Airline *airline) {
     return false;
 }
 
-vector<Vertex *> Graph::getVertexSet() {
+set<Vertex *> Graph::getVertexSet() {
     return vertexSet;
 }
 
@@ -67,9 +68,53 @@ vector<string> Graph::bfs(Vertex *source, Vertex *dest) {
     return {};
 }
 
+vector<pair<string, double>> Graph::dijkstra(Vertex *source, Vertex *dest) {
+    vector<pair<string, double>> result;
+
+    for (auto v : vertexSet) {
+        v->distance = DBL_MAX;
+    }
+
+    set<pair<double, Vertex*>> priorityQueue;
+    source->distance = 0;
+    priorityQueue.insert({source->distance, source});
+    unordered_map<Vertex*, Vertex*> parentMap;
+
+    while (!priorityQueue.empty()) {
+        Vertex* current = priorityQueue.begin()->second;
+        priorityQueue.erase(priorityQueue.begin());
+
+        for (auto& e : current->adj) {
+            Vertex* w = e.dest;
+            double newDistance = current->distance + e.weight;
+
+            if (newDistance < w->distance) {
+                priorityQueue.erase({w->distance, w});
+                w->distance = newDistance;
+                priorityQueue.insert({w->distance, w});
+
+                parentMap[w] = current;
+            }
+        }
+    }
+
+    Vertex* current = findVertex(dest->info);
+
+    while (current != nullptr) {
+        result.push_back({current->info->getCode(), current->distance});
+        current = parentMap[current];
+    }
+
+    reverse(result.begin(), result.end());
+    return result;
+}
+
 Vertex* Graph::findVertex(Airport* a) {
+    if(this->vertexSet.empty()){
+        return nullptr;
+    }
     for (auto vertex : vertexSet){
-        if (vertex->info == a){
+        if (vertex->info->getCode() == a->getCode()){
             return vertex;
         }
     }

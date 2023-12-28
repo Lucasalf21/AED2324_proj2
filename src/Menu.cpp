@@ -8,8 +8,10 @@
 
 using namespace std;
 
-Menu::Menu(Data* data, Graph graph){
+Menu::Menu(Data* data, Graph* graph){
     this->data = data;
+    g = graph;
+    Vertex* v = g->findVertex(data->getAirport("JFK"));
     int choice = 1;
 
     while (choice != 0){
@@ -34,6 +36,11 @@ Menu::Menu(Data* data, Graph graph){
                 break;
             case 3:
                 searchWithFilters(); //TODO
+                break;
+            case 4:
+                for (auto e : v->adj){
+                    cout << e.dest->info->getCode() << ' ' << e.airline->getCode() << ' ' << e.weight << endl;
+                }
                 break;
             case 0:
                 break;
@@ -121,7 +128,35 @@ void Menu::statistics() {
 
 //Menu options
 void Menu::bestFlightOption() {
+    string source;
+    string dest;
+    cout << "Choose origin aiport: ";
+    cin >> source;
+    Airport* a1 = data->getAirport(source);
+    if (a1 == nullptr){
+        cout << "Airport not found!" << endl;
+        return;
+    }
 
+    cout << "Choose destination airport: ";
+    cin >> dest;
+    Airport* a2 = data->getAirport(dest);
+    if (a2 == nullptr){
+        cout << "Airport not found!" << endl;
+        return;
+    }
+
+    Vertex* s = g->findVertex(a1);
+    Vertex* d = g->findVertex(a2);
+    vector<pair<string, double>> bestRoute = g->dijkstra(s, d);
+
+    cout << endl << "The best route from " << source << " to " << dest << " goes through:" << endl << endl;
+    cout << bestRoute[0].first << "->";
+    for (int i = 1;  i < bestRoute.size() - 2; i++){
+        cout << bestRoute[i].first << "->";
+    }
+    cout << bestRoute[bestRoute.size() - 1].first << endl << endl;
+    cout << "And travels a distance of " << bestRoute[bestRoute.size() - 1].second << " KM" << endl;
 }
 
 void Menu::searchWithFilters() {
