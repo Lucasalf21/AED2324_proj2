@@ -298,6 +298,21 @@ void Menu::maximumTrip() {
 }
 
 void Menu::topAirports() {
+    vector<Airport*> airports;
+    for(auto airport : data->getAirports()) {
+        airports.push_back(airport);
+    }
+    std::sort(airports.begin(), airports.end(), [](Airport* a, Airport* b) {
+        return a->getNumFlights() > b->getNumFlights();
+    });
 
+    cout << endl << "How many airports do you want to see? " << endl;
+    int numAirports;
+    cin >> numAirports;
+    cout << endl;
+    cout << "Top " << numAirports << " airports with greatest air traffic capacity: " << endl << endl;
+    for(int i = 0; i < numAirports; i++) {
+        cout << airports[i]->getName() << " (" << airports[i]->getCode() << ") - " << airports[i]->getNumFlights() << " flights" << endl;
+    }
 }
 
