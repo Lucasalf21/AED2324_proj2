@@ -10,7 +10,7 @@
 class Menu {
 public:
     Data* data;
-    Graph g;
+    Graph* g;
 
     Menu(Data* data, Graph* graph);
     void statistics();

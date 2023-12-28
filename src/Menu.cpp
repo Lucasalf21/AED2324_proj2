@@ -10,6 +10,8 @@ using namespace std;
 
 Menu::Menu(Data* data, Graph* graph){
     this->data = data;
+    g = graph;
+    Vertex* v = g->findVertex(data->getAirport("JFK"));
     int choice = 1;
 
     while (choice != 0){
@@ -34,6 +36,11 @@ Menu::Menu(Data* data, Graph* graph){
                 break;
             case 3:
                 searchWithFilters(); //TODO
+                break;
+            case 4:
+                for (auto e : v->adj){
+                    cout << e.dest->info->getCode() << ' ' << e.airline->getCode() << ' ' << e.weight << endl;
+                }
                 break;
             case 0:
                 break;
@@ -129,9 +136,9 @@ void Menu::bestFlightOption() {
     cin >> dest;
     Airport* s = data->getAirport(source);
     Airport* d = data->getAirport(dest);
-    Vertex* v1 = g.findVertex(s);
-    Vertex* v2 = g.findVertex(d);
-    vector<pair<string, double>> bestRoute = g.dijkstra(v1, v2);
+    Vertex* v1 = g->findVertex(s);
+    Vertex* v2 = g->findVertex(d);
+    vector<pair<string, double>> bestRoute = g->dijkstra(v1, v2);
     cout << bestRoute[0].first << ' ';
     for (int i = 1;  i < bestRoute.size() - 2; i++){
         cout << bestRoute[i].first << ' ';

@@ -1,6 +1,7 @@
 #include "Graph.h"
 #include <unordered_map>
 #include <algorithm>
+#include <iostream>
 
 
 bool Graph::addVertex(Airport *airport) {
@@ -67,50 +68,45 @@ vector<string> Graph::bfs(Vertex *source, Vertex *dest) {
     return {};
 }
 
-vector<pair<string, double>> Graph::dijkstra(Vertex* source, Vertex* dest){
-    vector<pair<string, double>> res;
+vector<pair<string, double>> Graph::dijkstra(Vertex *source, Vertex *dest) {
+    vector<pair<string, double>> result;
 
-    for (auto v : vertexSet){
-        v->visited = false;
+    for (auto v : vertexSet) {
         v->distance = DBL_MAX;
     }
 
-    priority_queue<Vertex*, vector<Vertex*>, greater<>> pq;
-    Vertex* current = findVertex(source->info);
-    current->distance = 0;
-    pq.push(current);
-
+    set<pair<Vertex*, double>> priorityQueue;
+    source->distance = 0;
+    priorityQueue.insert({source, source->distance});
     unordered_map<Vertex*, Vertex*> parentMap;
 
-    while (!pq.empty()){
-        current = pq.top();
-        pq.pop();
-        current->visited = true;
+    while (!priorityQueue.empty()) {
+        Vertex* current = priorityQueue.begin()->first;
+        priorityQueue.erase(priorityQueue.begin());
 
-        if (current == dest){
-            while(current != nullptr){
-                res.push_back({current->info->getCode(), current->distance});
-                current = parentMap[current];
-            }
-            reverse(res.begin(), res.end());
-            return res;
-        }
-
-        for (auto& e : current->adj){
+        for (auto& e : current->adj) {
             Vertex* w = e.dest;
-            if (!w->visited){
-                double newDistance = current->distance + e.weight;
-                if (newDistance < w->distance){
-                    w->distance = newDistance;
-                    parentMap[w] = current;
-                    pq.push(w);
-                }
+            double newDistance = current->distance + e.weight;
+
+            if (newDistance < w->distance) {
+                priorityQueue.erase({w, w->distance});
+                w->distance = newDistance;
+                priorityQueue.insert({w, w->distance});
+
+                parentMap[w] = current;
             }
         }
     }
 
+    Vertex* current = findVertex(dest->info);
 
-    return {};
+    while (current != nullptr) {
+        result.push_back({current->info->getCode(), current->distance});
+        current = parentMap[current];
+    }
+
+    reverse(result.begin(), result.end());
+    return result;
 }
 
 Vertex* Graph::findVertex(Airport* a) {
