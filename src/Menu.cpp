@@ -5,6 +5,7 @@
 #include "Menu.h"
 #include <iostream>
 #include <algorithm>
+#include <map>
 
 using namespace std;
 
@@ -111,10 +112,10 @@ void Menu::statistics() {
                 reachableDestinationsAirport(); //TODO
                 break;
             case 12:
-                maximumTrip(); //? TODO
+                maximumTrip(); //?TODO
                 break;
             case 13:
-                topAirports(); //TODO
+                topAirports();
 
             case 69:
                 return;
@@ -294,7 +295,63 @@ void Menu::reachableDestinationsAirport() {
 }
 
 void Menu::maximumTrip() {
+    cout << endl << "Do you want to see the maximum trip for a specific airport? (y/n)" << endl;
+    char choice;
+    cin >> choice;
+    Vertex* source;
+    vector<Vertex*> destinations;
+    double maxDistance = -1.0;
 
+    if(choice == 'n' || choice == 'N') {
+        for(auto airport : g->getVertexSet()) {
+            double distance = g->findMaxDistance(airport);
+            if(distance >= maxDistance) {
+                maxDistance = distance;
+                source = airport;
+            }
+        }
+    }
+
+    else if(choice == 'y' || choice == 'Y') {
+        cout << endl << "Enter the source airport's code: " << endl;
+        string sourceCode;
+        cin >> sourceCode;
+        for(auto &c : sourceCode) c = toupper(c);
+        source = g->findVertex(data->getAirport(sourceCode));
+        if(source == nullptr){
+            cout << "Airport not found!" << endl;
+            return;
+        }
+    }
+    else {
+        cout << "Invalid choice!" << endl;
+        return;
+    }
+
+
+    g->findMaxDistance(source);
+
+    for(auto airport : g->getVertexSet()) {
+        if(!airport->visited) continue;
+        if(airport->distance == maxDistance) {
+            cout << airport->info->getCode();
+            destinations.push_back(airport);
+        }
+    }
+
+    if(destinations.size() == 1)
+        cout << endl << "The maximum trip is: " << endl;
+    else
+        cout << endl << "The maximum trips are: " << endl;
+
+    for(auto airport : destinations) {
+        auto bestRoute = g->dijkstra(source, airport);
+        cout << bestRoute[0].first << "->";
+        for (int i = 1;  i < bestRoute.size() - 2; i++){
+            cout << bestRoute[i].first << "->";
+        }
+        cout << bestRoute[bestRoute.size() - 1].first << endl << endl;
+    }
 }
 
 void Menu::topAirports() {
