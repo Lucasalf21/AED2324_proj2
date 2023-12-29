@@ -328,13 +328,11 @@ void Menu::maximumTrip() {
         return;
     }
 
-
     g->findMaxDistance(source);
 
     for(auto airport : g->getVertexSet()) {
         if(!airport->visited) continue;
         if(airport->distance == maxDistance) {
-            cout << airport->info->getCode();
             destinations.push_back(airport);
         }
     }
@@ -345,12 +343,11 @@ void Menu::maximumTrip() {
         cout << endl << "The maximum trips are: " << endl;
 
     for(auto airport : destinations) {
-        auto bestRoute = g->dijkstra(source, airport);
-        cout << bestRoute[0].first << "->";
-        for (int i = 1;  i < bestRoute.size() - 2; i++){
-            cout << bestRoute[i].first << "->";
+        auto route = g->bfs(source, airport);
+        for(int i = 0; i < route.size() - 2; i++) {
+            cout << route[i] << " -> ";
         }
-        cout << bestRoute[bestRoute.size() - 1].first << endl << endl;
+        cout << route[route.size() - 1] << endl;
     }
 }
 
