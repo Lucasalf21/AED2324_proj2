@@ -175,10 +175,21 @@ void Menu::flightsFromAirport() {
     cout << endl << "Enter the desired airport's code: " << endl;
     string sourceCode;
     cin >> sourceCode;
-    for(auto flight : data->getFlights()) {
-        if(flight->getSource()->getCode() == sourceCode) {
-            flight->printFlight();
-        }
+
+    Airport* source = data->getAirport(sourceCode);
+    if (source == nullptr){
+        cout << endl << "Airport not found!" << endl;
+        return;
+    }
+
+    Vertex* airport = g->findVertex(source);
+    for (auto& e : airport->adj){
+        Airport* destination = data->getAirport(e.dest->info->getCode());
+        Airline* airline = data->getAirline(e.airline->getCode());
+        cout << source->getCountry() << " - " << source->getCity() << " (" << source->getName() << " - " << source->getCode() << ")"
+             << " --> "
+             << destination->getCountry() << " - " << destination->getCity() << " (" << destination->getName() << " - " << destination->getCode() << ")"
+             << " | " << airline->getName() << " (" << airline->getCode() << ")" << endl;
     }
 }
 
@@ -198,12 +209,19 @@ void Menu::numberOfFlightsAirport() {
     cout << endl << "Enter the desired airport's code: " << endl;
     string sourceCode;
     cin >> sourceCode;
-    int counter = 0;
-    for(auto flight : data->getFlights()) {
-        if(flight->getSource()->getCode() == sourceCode) {
-            counter++;
-        }
+    Airport* source = data->getAirport(sourceCode);
+    if (source == nullptr){
+        cout << endl << "Airport not found!" << endl;
+        return;
     }
+
+    Vertex* airport = g->findVertex(source);
+    int counter = 0;
+
+    for (auto& e : airport->adj){
+        counter++;
+    }
+
     cout << endl << "Number of flights: " << counter << endl << endl;
 }
 
@@ -223,20 +241,22 @@ void Menu::numberOfFlightsAirline() {
 void Menu::countriesFliesToAirport() {
     cout << endl << "Enter the desired airport's code: " << endl;
     string sourceCode;
-    vector<string> countries;
-    for(auto flight : data->getFlights()) {
-        if(flight->getSource()->getCode() == sourceCode && std::find(countries.begin(), countries.end(), flight->getDestination()->getCountry()) == countries.end()) {
-            countries.push_back(flight->getDestination()->getCountry());
-        }
+    cin >> sourceCode;
+    Airport* source = data->getAirport(sourceCode);
+    if (source == nullptr){
+        cout << endl << "Airport not found!" << endl;
+        return;
     }
 
-    sort(countries.begin(), countries.end());
-    cout << endl << "Countries: " << endl;
-
-    for(auto country : countries) {
-        cout << country << endl;
+    Vertex* airport = g->findVertex(source);
+    set<string> countries;
+    for (auto& e : airport->adj){
+        countries.insert(e.dest->info->getCountry());
     }
-
+    cout << "Countries:" << endl;
+    for (auto& c : countries){
+        cout << c << endl;
+    }
     cout << endl;
 }
 
@@ -266,11 +286,13 @@ void Menu::countriesFliesToCity() {
 
 string Menu::checkCountry(string cityName) {
     string countryName;
-    for(auto airport : data->getAirports()) {
-        if(airport->getCity() == cityName) {
-            if(countryName.empty()) countryName = airport->getCountry();
-            if(countryName != airport->getCountry()){
-                cout << "There are multiple countries with the same city name. Please enter the country name: " << endl;
+    for (auto v : g->getVertexSet()){
+        if (v->info->getCity() == cityName){
+            if (countryName.empty()){
+                countryName = v->info->getCountry();
+            }
+            else if (countryName != v->info->getCountry()){
+                cout << "There are multiple countries with the same city name! Please enter the country name: ";
                 getline(cin, countryName);
                 return countryName;
             }
