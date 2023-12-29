@@ -292,11 +292,13 @@ void Menu::countriesFliesToCity() {
 
 string Menu::checkCountry(string cityName) {
     string countryName;
-    for(auto airport : data->getAirports()) {
-        if(airport->getCity() == cityName) {
-            if(countryName.empty()) countryName = airport->getCountry();
-            if(countryName != airport->getCountry()){
-                cout << "There are multiple countries with the same city name. Please enter the country name: " << endl;
+    for (auto v : g->getVertexSet()){
+        if (v->info->getCity() == cityName){
+            if (countryName.empty()){
+                countryName = v->info->getCountry();
+            }
+            else if (countryName != v->info->getCountry()){
+                cout << "There are multiple countries with the same city name! Please enter the country name: ";
                 getline(cin, countryName);
                 return countryName;
             }
