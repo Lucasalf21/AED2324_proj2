@@ -9,6 +9,8 @@
 #include <list>
 #include <cfloat>
 #include <set>
+#include <unordered_set>
+#include <unordered_map>
 #include "Airport.h"
 #include "Airline.h"
 
@@ -40,8 +42,15 @@ public:
     bool addEdge(Vertex* source, Vertex* dest, Airline* airline);
     set<Vertex*> getVertexSet();
     vector<string> bfs(Vertex* source, Vertex* dest);
+    vector<Airport*> dfs();
+    void dfsVisit(Vertex* v, vector<Airport*>& res) const;
     vector<pair<string, double>> dijkstra(Vertex* source, Vertex* dest);
     Vertex* findVertex(Airport* v);
+    set<Vertex*> findArticulationPoints();
+
+    void dfsArticulationPoints(Vertex *u, Vertex *parent, set<Vertex *> &articulationPoints,
+                               unordered_map<Vertex *, int> &disc, unordered_map<Vertex *, int> &low,
+                               int &time);
 };
 
 #endif //AED2324_PROJ2_GRAPH_H
