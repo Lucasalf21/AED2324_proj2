@@ -66,8 +66,50 @@ vector<string> Graph::bfs(Vertex *source, Vertex *dest){
             }
         }
     }
-
     return {};
+}
+
+set<vector<Vertex*>> Graph::findAllShortestPaths(Vertex* source, Vertex* dest) {
+    auto maxSize = bfs(source, dest).size();
+
+    for (auto v : vertexSet) {
+        v->visited = false;
+    }
+
+    set<vector<Vertex*>> result;
+    queue<vector<Vertex *>> q;
+    vector<Vertex*> currentPath;
+    Vertex* current = findVertex(source->info);
+    current->visited = true;
+    currentPath.push_back(current);
+    q.push(currentPath);
+
+    while(!q.empty()){
+        currentPath = q.front();
+        q.pop();
+        current = currentPath.back();
+
+        if (current == dest){
+            result.insert(currentPath);
+            continue;
+        }
+
+        for (auto& e : current->adj){
+            Vertex* w = e.dest;
+            if (!w->visited) {
+                if(w != dest)
+                    w->visited = true;
+                vector<Vertex*> newPath = currentPath;
+
+                if(newPath.size() < maxSize) {
+                    newPath.push_back(w);
+                    q.push(newPath);
+                }
+            }
+        }
+    }
+
+    return result;
 }
 
 double Graph::findMaxDistance(Vertex *source) {
@@ -201,3 +243,4 @@ set<Vertex*> Graph::findArticulationPoints() {
 
     return articulationPoints;
 }
+

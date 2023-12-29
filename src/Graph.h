@@ -42,6 +42,7 @@ public:
     bool addEdge(Vertex* source, Vertex* dest, Airline* airline);
     set<Vertex*> getVertexSet();
     vector<string> bfs(Vertex* source, Vertex* dest);
+    set<vector<Vertex*>> findAllShortestPaths(Vertex* start, Vertex* end);
     double findMaxDistance(Vertex* source);
     vector<pair<string, double>> dijkstra(Vertex* source, Vertex* dest);
     Vertex* findVertex(Airport* v);

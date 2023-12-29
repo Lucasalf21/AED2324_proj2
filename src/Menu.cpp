@@ -147,14 +147,22 @@ void Menu::bestFlightOption() {
 
     Vertex* s = g->findVertex(a1);
     Vertex* d = g->findVertex(a2);
-    vector<string> bestRoute = g->bfs(s, d);
+    set<vector<Vertex *>> bestRoutes = g->findAllShortestPaths(s, d);
 
-    cout << endl << "The best route from " << source << " to " << dest << " goes through:" << endl << endl;
-    cout << bestRoute[0] << "->";
-    for (int i = 1;  i < bestRoute.size() - 1; i++){
-        cout << bestRoute[i] << "->";
+    if (bestRoutes.size() > 1)
+        cout << endl << "The best routes from " << a1->getName() << " to " << a2->getName() << " go through:" << endl << endl;
+    else
+        cout << endl << "The best route from " << a1->getName() << " to " << a2->getName() << " goes through:" << endl << endl;
+
+    for(auto& route : bestRoutes) {
+        cout << route[0]->info->getCode() << "->";
+        for (int i = 1; i < route.size() - 1; i++) {
+            cout << route[i]->info->getCode() << "->";
+        }
+        cout << route[route.size() - 1]->info->getCode() << endl;
     }
-    cout << bestRoute[bestRoute.size() - 1] << endl << endl;
+
+    cout << endl;
 }
 
 void Menu::searchWithFilters() {
@@ -490,7 +498,7 @@ void Menu::maximumTrip() {
         auto source = pair.first;
         for(auto dest : pair.second) {
             auto route = g->bfs(source, dest);
-            for (int i = 0; i < route.size() - 2; i++) {
+            for (int i = 0; i < route.size() - 1; i++) {
                 cout << route[i] << " -> ";
             }
             cout << route[route.size() - 1] << endl;
