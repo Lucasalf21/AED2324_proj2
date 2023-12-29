@@ -11,7 +11,6 @@ using namespace std;
 Menu::Menu(Data* data, Graph* graph){
     this->data = data;
     g = graph;
-    Vertex* v = g->findVertex(data->getAirport("JFK"));
     int choice = 1;
 
     while (choice != 0){
@@ -36,11 +35,6 @@ Menu::Menu(Data* data, Graph* graph){
                 break;
             case 3:
                 searchWithFilters(); //TODO
-                break;
-            case 4:
-                for (auto e : v->adj){
-                    cout << e.dest->info->getCode() << ' ' << e.airline->getCode() << ' ' << e.weight << endl;
-                }
                 break;
             case 0:
                 break;
