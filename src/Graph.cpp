@@ -4,7 +4,7 @@
 #include <iostream>
 
 
-bool Graph::addVertex(Airport *airport) {
+bool Graph::addVertex(Airport *airport){
     Vertex* newAirport = new Vertex(airport);
     if (findVertex(newAirport->info) != nullptr){
         return false;
@@ -13,13 +13,14 @@ bool Graph::addVertex(Airport *airport) {
     return true;
 }
 
-bool Graph::addEdge(Vertex *source, Vertex *dest, Airline *airline) {
+bool Graph::addEdge(Vertex *source, Vertex *dest, Airline *airline){
     if (findVertex(source->info) != nullptr && findVertex(dest->info) != nullptr){
         Airport* airport1 = source->info;
         Airport* airport2 = dest->info;
         double w = airport1->calculateDistance(airport2);
         Edge newConnection(dest, airline, w);
         source->adj.push_back(newConnection);
+        dest->inVertices.insert(source);
         return true;
     }
     return false;
@@ -29,7 +30,7 @@ set<Vertex *> Graph::getVertexSet() {
     return vertexSet;
 }
 
-vector<string> Graph::bfs(Vertex *source, Vertex *dest) {
+vector<string> Graph::bfs(Vertex *source, Vertex *dest){
     vector<string> res;
 
     for (auto v: vertexSet) {
@@ -143,7 +144,7 @@ vector<pair<string, double>> Graph::dijkstra(Vertex *source, Vertex *dest) {
     return result;
 }
 
-Vertex* Graph::findVertex(Airport* a) {
+Vertex* Graph::findVertex(Airport* a){
     if(this->vertexSet.empty()){
         return nullptr;
     }

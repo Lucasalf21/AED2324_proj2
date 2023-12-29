@@ -27,9 +27,7 @@ struct Vertex{
     std::vector<Edge> adj;
     bool visited;
     double distance;
-    bool operator <(Vertex* v){
-        return this->distance < v->distance;
-    }
+    set<Vertex*> inVertices;
 
     Vertex(Airport* in) : info(in), adj({}), visited(false), distance(DBL_MAX) {};
 };

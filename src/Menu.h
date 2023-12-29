@@ -32,6 +32,9 @@ public:
     void maximumTrip();
     void topAirports();
 
+    void
+    DFSCountReachableDestinations(Airport *currentAirport, int currentStops, int maxStops, int choice,
+                                  int &reachableCount);
 };
 
 
