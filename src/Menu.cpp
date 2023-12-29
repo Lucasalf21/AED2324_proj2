@@ -126,7 +126,8 @@ void Menu::statistics() {
 }
 
 //Menu options
-void Menu::bestFlightOption() {
+void Menu::bestFlightOption(set<Airline*> airlines) {
+    bool filtered = !airlines.empty();
     string source;
     string dest;
     cout << "Choose origin aiport: ";
@@ -147,12 +148,31 @@ void Menu::bestFlightOption() {
 
     Vertex* s = g->findVertex(a1);
     Vertex* d = g->findVertex(a2);
-    set<vector<Vertex *>> bestRoutes = g->findAllShortestPaths(s, d);
+    set<vector<Vertex *>> bestRoutes = g->findAllShortestPaths(s, d, airlines);
 
-    if (bestRoutes.size() > 1)
-        cout << endl << "The best routes from " << a1->getName() << " to " << a2->getName() << " go through:" << endl << endl;
-    else
-        cout << endl << "The best route from " << a1->getName() << " to " << a2->getName() << " goes through:" << endl << endl;
+    if (bestRoutes.empty()) {
+        if (filtered)
+            cout << endl << "There are no routes from " << a1->getName() << " to " << a2->getName()
+                 << " with the selected airlines." << endl << endl;
+        else
+            cout << endl << "There are no routes from " << a1->getName() << " to " << a2->getName() << "." << endl
+                 << endl;
+
+        return;
+    }
+
+    if (bestRoutes.size() > 1) {
+        cout << endl << "The best routes from " << a1->getName() << " to " << a2->getName();
+        if(filtered)
+            cout << " with the selected airlines";
+        cout << " go through:" << endl << endl;
+    }
+    else {
+        cout << endl << "The best route from " << a1->getName() << " to " << a2->getName();
+        if(filtered)
+            cout << " with the selected airlines";
+        cout << " goes through:" << endl << endl;
+    }
 
     for(auto& route : bestRoutes) {
         cout << route[0]->info->getCode() << "->";
@@ -166,7 +186,23 @@ void Menu::bestFlightOption() {
 }
 
 void Menu::searchWithFilters() {
+    cout << "Choose the airlines you want to fly with" << endl
+        <<  "Enter the airline's code or 0 to stop: " << endl;
 
+    set<Airline*> airlines;
+    string airlineCode;
+
+    while(cin >> airlineCode){
+        if (airlineCode == "0") break;
+        Airline* airline = data->getAirline(airlineCode);
+        if (airline == nullptr){
+            cout << "Airline not found!" << endl;
+            continue;
+        }
+        airlines.insert(airline);
+    }
+
+    bestFlightOption(airlines);
 }
 
 
