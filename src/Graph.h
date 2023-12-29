@@ -43,8 +43,6 @@ public:
     set<Vertex*> getVertexSet();
     vector<string> bfs(Vertex* source, Vertex* dest);
     double findMaxDistance(Vertex* source);
-    vector<Airport*> dfs();
-    void dfsVisit(Vertex* v, vector<Airport*>& res) const;
     vector<pair<string, double>> dijkstra(Vertex* source, Vertex* dest);
     Vertex* findVertex(Airport* v);
     set<Vertex*> findArticulationPoints();

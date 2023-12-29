@@ -104,32 +104,6 @@ double Graph::findMaxDistance(Vertex *source) {
     return maxDistance;
 }
 
-vector<Airport*> Graph::dfs(){
-    vector<Airport*> res;
-
-    for (auto v : vertexSet){
-        v->visited = false;
-    }
-
-    for (auto v : vertexSet){
-        if (!v->visited){
-            dfsVisit(v, res);
-        }
-    }
-
-    return res;
-}
-
-void Graph::dfsVisit(Vertex *v, vector<Airport *> &res) const {
-    v->visited = true;
-    res.push_back(v->info);
-    for (auto& e : v->adj){
-        auto w = e.dest;
-        if (! w->visited)
-            dfsVisit(w, res);
-    }
-}
-
 vector<pair<string, double>> Graph::dijkstra(Vertex *source, Vertex *dest){
     vector<pair<string, double>> result;
 

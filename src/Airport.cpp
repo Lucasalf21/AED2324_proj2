@@ -66,3 +66,11 @@ bool Airport::operator<(const Airport &airport) const {
 bool Airport::operator=(const Airport &airport) {
     return this->code == airport.code;
 }
+
+void Airport::addFlight() {
+    this->numFlights++;
+}
+
+int Airport::getNumFlights() const {
+    return numFlights;
+}
