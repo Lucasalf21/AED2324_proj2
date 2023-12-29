@@ -1,5 +1,6 @@
 #include "Graph.h"
 #include <unordered_map>
+#include <unordered_set>
 #include <algorithm>
 #include <iostream>
 
@@ -103,7 +104,7 @@ double Graph::findMaxDistance(Vertex *source) {
     return maxDistance;
 }
 
-vector<pair<string, double>> Graph::dijkstra(Vertex *source, Vertex *dest) {
+vector<pair<string, double>> Graph::dijkstra(Vertex *source, Vertex *dest){
     vector<pair<string, double>> result;
 
     for (auto v : vertexSet) {
@@ -154,4 +155,49 @@ Vertex* Graph::findVertex(Airport* a){
         }
     }
     return nullptr;
+}
+
+void Graph::dfsArticulationPoints(Vertex* u, Vertex* parent, set<Vertex*>& articulationPoints, unordered_map<Vertex*, int>& disc, unordered_map<Vertex*, int>& low, int& time) {
+    int children = 0;
+    disc[u] = low[u] = ++time;
+
+    for (auto& edge : u->adj) {
+        Vertex* v = edge.dest;
+
+        if (!v->visited) {
+            children++;
+            v->visited = true;
+            v->inVertices.insert(u);
+
+            dfsArticulationPoints(v, u, articulationPoints, disc, low, time);
+
+            low[u] = min(low[u], low[v]);
+
+            if ((parent == nullptr && children > 1) || (parent != nullptr && low[v] >= disc[u])) {
+                articulationPoints.insert(u);
+            }
+        } else if (v != parent) {
+            low[u] = min(low[u], disc[v]);
+        }
+    }
+}
+
+set<Vertex*> Graph::findArticulationPoints() {
+    set<Vertex*> articulationPoints;
+    unordered_map<Vertex*, int> disc;
+    unordered_map<Vertex*, int> low;
+    int time = 0;
+
+    for (auto& u : vertexSet) {
+        u->visited = false;
+    }
+
+    for (auto& u : vertexSet) {
+        if (!u->visited) {
+            u->visited = true;
+            dfsArticulationPoints(u, nullptr, articulationPoints, disc, low, time);
+        }
+    }
+
+    return articulationPoints;
 }

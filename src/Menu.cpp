@@ -63,6 +63,7 @@ void Menu::statistics() {
              << " 11 - Reachable destinations from an airport in a number of stops" << endl
              << " 12 - Maximum trip (?)" << endl
              << " 13 - Top airports with greatest air traffic capacity" << endl
+             << " 14 - Number of essential airports to the network" << endl
              << endl
              << " 69 - Go back" << endl
              << " 0 - Exit" << endl
@@ -110,6 +111,9 @@ void Menu::statistics() {
                 break;
             case 13:
                 topAirports();
+                break;
+            case 14:
+                essentialAirports(); //TODO
                 break;
             case 69:
                 return;
@@ -512,5 +516,9 @@ void Menu::topAirports() {
     for(int i = 0; i < numAirports; i++) {
         cout << airports[i]->getName() << " (" << airports[i]->getCode() << ") - " << airports[i]->getNumFlights() << " flights" << endl;
     }
+}
+
+void Menu::essentialAirports() {
+    cout << endl << "Number of essential airports: " << g->findArticulationPoints().size() << endl << endl;
 }
 
