@@ -70,6 +70,40 @@ vector<string> Graph::bfs(Vertex *source, Vertex *dest){
     return {};
 }
 
+double Graph::findMaxDistance(Vertex *source) {
+    double maxDistance = -1;
+    for (auto vertex: vertexSet) {
+        vertex->visited = false;
+        vertex->distance = -1;
+    }
+
+    Vertex* v = source;
+    queue<Vertex*> q;
+    v->visited = true;
+    v->distance = 0;
+    q.push(source);
+
+    while(!q.empty()){
+        v = q.front();
+        q.pop();
+        for (auto& e : v->adj){
+            auto w = e.dest;
+            if (!w->visited){
+                w->visited = true;
+                w->distance = v->distance + 1;
+                q.push(w);
+            }
+        }
+    }
+
+    for (auto vertex: vertexSet) {
+        if (vertex->distance > maxDistance){
+            maxDistance = vertex->distance;
+        }
+    }
+    return maxDistance;
+}
+
 vector<Airport*> Graph::dfs(){
     vector<Airport*> res;
 
