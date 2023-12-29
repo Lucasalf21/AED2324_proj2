@@ -298,56 +298,71 @@ void Menu::maximumTrip() {
     cout << endl << "Do you want to see the maximum trip for a specific airport? (y/n)" << endl;
     char choice;
     cin >> choice;
-    Vertex* source;
-    vector<Vertex*> destinations;
+    vector<Vertex*> sources;
+    map<Vertex*, vector<Vertex*>> destinations;
     double maxDistance = -1.0;
 
     if(choice == 'n' || choice == 'N') {
         for(auto airport : g->getVertexSet()) {
             double distance = g->findMaxDistance(airport);
-            if(distance >= maxDistance) {
+            if(distance == maxDistance) {
+                sources.push_back(airport);
+            }
+            else if(distance > maxDistance) {
                 maxDistance = distance;
-                source = airport;
+                sources.clear();
+                sources.push_back(airport);
             }
         }
     }
 
     else if(choice == 'y' || choice == 'Y') {
-        cout << endl << "Enter the source airport's code: " << endl;
+        cout << endl << "Enter the sources airport's code: " << endl;
         string sourceCode;
         cin >> sourceCode;
-        for(auto &c : sourceCode) c = toupper(c);
-        source = g->findVertex(data->getAirport(sourceCode));
-        if(source == nullptr){
+
+        auto airport = data->getAirport(sourceCode);
+
+        if(airport == nullptr){
             cout << "Airport not found!" << endl;
             return;
         }
+
+        cout << "TESTES: " << endl << "SourceCode inserido: " << sourceCode << endl
+                                    << "Airport: " << airport->getCode() << endl;
+
+        sources.push_back(g->findVertex(airport));
+        cout << "Sources size: " << sources.size() << endl;
     }
     else {
         cout << "Invalid choice!" << endl;
         return;
     }
 
-    g->findMaxDistance(source);
-
-    for(auto airport : g->getVertexSet()) {
-        if(!airport->visited) continue;
-        if(airport->distance == maxDistance) {
-            destinations.push_back(airport);
+    for(auto source : sources) {
+        maxDistance = g->findMaxDistance(source);
+        for (auto dest: g->getVertexSet()) {
+            if (!dest->visited) continue;
+            if (dest->distance == maxDistance) {
+                destinations[source].push_back(dest);
+            }
         }
     }
 
-    if(destinations.size() == 1)
+    if(destinations.size() == 1 && destinations.begin()->second.size() == 1)
         cout << endl << "The maximum trip is: " << endl;
     else
         cout << endl << "The maximum trips are: " << endl;
 
-    for(auto airport : destinations) {
-        auto route = g->bfs(source, airport);
-        for(int i = 0; i < route.size() - 2; i++) {
-            cout << route[i] << " -> ";
+    for(const auto& pair : destinations) {
+        auto source = pair.first;
+        for(auto dest : pair.second) {
+            auto route = g->bfs(source, dest);
+            for (int i = 0; i < route.size() - 2; i++) {
+                cout << route[i] << " -> ";
+            }
+            cout << route[route.size() - 1] << endl;
         }
-        cout << route[route.size() - 1] << endl;
     }
 }
 
