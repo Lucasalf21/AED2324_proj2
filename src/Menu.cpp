@@ -5,6 +5,7 @@
 #include "Menu.h"
 #include <iostream>
 #include <algorithm>
+#include <map>
 
 using namespace std;
 
@@ -105,10 +106,10 @@ void Menu::statistics() {
                 reachableDestinationsAirport(); //Fiz mas nao consegui testar
                 break;
             case 12:
-                maximumTrip(); //? TODO
+                maximumTrip();
                 break;
             case 13:
-                topAirports(); //TODO
+                topAirports();
                 break;
             case 69:
                 return;
@@ -423,10 +424,93 @@ void Menu::DFSCountReachableDestinations(Airport* currentAirport, int currentSto
 }
 
 void Menu::maximumTrip() {
+    cout << endl << "Do you want to see the maximum trip for a specific airport? (y/n)" << endl;
+    char choice;
+    cin >> choice;
+    vector<Vertex*> sources;
+    map<Vertex*, vector<Vertex*>> destinations;
+    double maxDistance = -1.0;
 
+    if(choice == 'n' || choice == 'N') {
+        for(auto airport : g->getVertexSet()) {
+            double distance = g->findMaxDistance(airport);
+            if(distance == maxDistance) {
+                sources.push_back(airport);
+            }
+            else if(distance > maxDistance) {
+                maxDistance = distance;
+                sources.clear();
+                sources.push_back(airport);
+            }
+        }
+    }
+
+    else if(choice == 'y' || choice == 'Y') {
+        cout << endl << "Enter the sources airport's code: " << endl;
+        string sourceCode;
+        cin >> sourceCode;
+
+        auto airport = data->getAirport(sourceCode);
+
+        if(airport == nullptr){
+            cout << "Airport not found!" << endl;
+            return;
+        }
+
+        cout << "TESTES: " << endl << "SourceCode inserido: " << sourceCode << endl
+                                    << "Airport: " << airport->getCode() << endl;
+
+        sources.push_back(g->findVertex(airport));
+        cout << "Sources size: " << sources.size() << endl;
+    }
+    else {
+        cout << "Invalid choice!" << endl;
+        return;
+    }
+
+    for(auto source : sources) {
+        maxDistance = g->findMaxDistance(source);
+        for (auto dest: g->getVertexSet()) {
+            if (!dest->visited) continue;
+            if (dest->distance == maxDistance) {
+                destinations[source].push_back(dest);
+            }
+        }
+    }
+
+    if(destinations.size() == 1 && destinations.begin()->second.size() == 1)
+        cout << endl << "The maximum trip is: " << endl;
+    else
+        cout << endl << "The maximum trips are: " << endl;
+
+    for(const auto& pair : destinations) {
+        auto source = pair.first;
+        for(auto dest : pair.second) {
+            auto route = g->bfs(source, dest);
+            for (int i = 0; i < route.size() - 2; i++) {
+                cout << route[i] << " -> ";
+            }
+            cout << route[route.size() - 1] << endl;
+        }
+    }
 }
 
 void Menu::topAirports() {
+    vector<Airport*> airports;
+    for(auto airport : data->getAirports()) {
+        airports.push_back(airport);
+    }
+    std::sort(airports.begin(), airports.end(), [](Airport* a, Airport* b) {
+        return a->getNumFlights() > b->getNumFlights();
+    });
 
+    cout << endl << "How many airports do you want to see? " << endl;
+    int numAirports;
+    cin >> numAirports;
+    cout << endl;
+    cout << "Top " << numAirports << " airports with greatest air traffic capacity: " << endl << endl;
+    for(int i = 0; i < numAirports; i++) {
+        cout << airports[i]->getName() << " (" << airports[i]->getCode() << ") - " << airports[i]->getNumFlights() << " flights" << endl;
+    }
 }
 

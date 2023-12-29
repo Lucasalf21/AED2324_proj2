@@ -73,7 +73,7 @@ void Filereader::readFlights(){
         source = data->getAirport(sourceCode);
         target = data->getAirport(targetCode);
         airline = data->getAirline(airlineCode);
-
+        source->addFlight();
         data->newFlight(new Flight(source, target, airline));
     }
 }
