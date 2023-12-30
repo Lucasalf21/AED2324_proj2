@@ -202,7 +202,7 @@ void Menu::bestFlightOptionByCoordinates() {
     // Implement logic to get the geographic coordinates from the user
     // You can prompt for latitude and longitude
 
-    double sourceLatitude, sourceLongitude, destLatitude, destLongitude;
+    float sourceLatitude, sourceLongitude, destLatitude, destLongitude;
 
     cout << "Enter the latitude of the origin: ";
     cin >> sourceLatitude;
