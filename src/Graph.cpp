@@ -31,7 +31,7 @@ set<Vertex *> Graph::getVertexSet() {
     return vertexSet;
 }
 
-vector<string> Graph::bfs(Vertex *source, Vertex *dest){
+vector<string> Graph::bfs(Vertex *source, Vertex *dest, set<Airline*> airlines){
     vector<string> res;
 
     for (auto v: vertexSet) {
@@ -58,16 +58,64 @@ vector<string> Graph::bfs(Vertex *source, Vertex *dest){
         }
 
         for (auto& e : current->adj){
-            Vertex* w = e.dest;
-            if (!w->visited){
-                w->visited = true;
-                parentMap[w] = current;
-                q.push(w);
+            if (airlines.empty() || airlines.find(e.airline) != airlines.end()) {
+                Vertex *w = e.dest;
+                if (!w->visited) {
+                    w->visited = true;
+                    parentMap[w] = current;
+                    q.push(w);
+                }
             }
         }
     }
-
     return {};
+}
+
+set<vector<Vertex*>> Graph::findAllShortestPaths(Vertex* source, Vertex* dest, set<Airline*> airlines) {
+    auto maxSize = bfs(source, dest, airlines).size();
+    cout << "Selected Airlines: " << endl;
+    for (auto airline : airlines) {
+        cout << airline->getCode() << " " << airline->getName() << endl;
+    }
+    for (auto v : vertexSet) {
+        v->visited = false;
+    }
+
+    set<vector<Vertex*>> result;
+    queue<vector<Vertex *>> q;
+    vector<Vertex*> currentPath;
+    Vertex* current = findVertex(source->info);
+    current->visited = true;
+    currentPath.push_back(current);
+    q.push(currentPath);
+
+    while(!q.empty()){
+        currentPath = q.front();
+        q.pop();
+        current = currentPath.back();
+
+        if (current == dest){
+            result.insert(currentPath);
+            continue;
+        }
+
+        for (auto& e : current->adj){
+            if (airlines.empty() || airlines.find(e.airline) != airlines.end()) {
+                Vertex *w = e.dest;
+                if (!w->visited) {
+                    if (w != dest)
+                        w->visited = true;
+                    vector<Vertex *> newPath = currentPath;
+
+                    if (newPath.size() < maxSize) {
+                        newPath.push_back(w);
+                        q.push(newPath);
+                    }
+                }
+            }
+        }
+    }
+    return result;
 }
 
 double Graph::findMaxDistance(Vertex *source) {
@@ -201,3 +249,4 @@ set<Vertex*> Graph::findArticulationPoints() {
 
     return articulationPoints;
 }
+

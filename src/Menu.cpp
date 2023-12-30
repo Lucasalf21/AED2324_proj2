@@ -126,7 +126,8 @@ void Menu::statistics() {
 }
 
 //Menu options
-void Menu::bestFlightOption() {
+void Menu::bestFlightOption(set<Airline*> airlines) {
+    bool filtered = !airlines.empty();
     string source;
     string dest;
     cout << "Choose origin aiport: ";
@@ -147,19 +148,61 @@ void Menu::bestFlightOption() {
 
     Vertex* s = g->findVertex(a1);
     Vertex* d = g->findVertex(a2);
-    vector<pair<string, double>> bestRoute = g->dijkstra(s, d);
+    set<vector<Vertex *>> bestRoutes = g->findAllShortestPaths(s, d, airlines);
 
-    cout << endl << "The best route from " << source << " to " << dest << " goes through:" << endl << endl;
-    cout << bestRoute[0].first << "->";
-    for (int i = 1;  i < bestRoute.size() - 2; i++){
-        cout << bestRoute[i].first << "->";
+    if (bestRoutes.empty()) {
+        if (filtered)
+            cout << endl << "There are no routes from " << a1->getName() << " to " << a2->getName()
+                 << " with the selected airlines." << endl << endl;
+        else
+            cout << endl << "There are no routes from " << a1->getName() << " to " << a2->getName() << "." << endl
+                 << endl;
+
+        return;
     }
-    cout << bestRoute[bestRoute.size() - 1].first << endl << endl;
-    cout << "And travels a distance of " << bestRoute[bestRoute.size() - 1].second << " KM" << endl;
+
+    if (bestRoutes.size() > 1) {
+        cout << endl << "The best routes from " << a1->getName() << " to " << a2->getName();
+        if(filtered)
+            cout << " with the selected airlines";
+        cout << " go through:" << endl << endl;
+    }
+    else {
+        cout << endl << "The best route from " << a1->getName() << " to " << a2->getName();
+        if(filtered)
+            cout << " with the selected airlines";
+        cout << " goes through:" << endl << endl;
+    }
+
+    for(auto& route : bestRoutes) {
+        cout << route[0]->info->getCode() << "->";
+        for (int i = 1; i < route.size() - 1; i++) {
+            cout << route[i]->info->getCode() << "->";
+        }
+        cout << route[route.size() - 1]->info->getCode() << endl;
+    }
+
+    cout << endl;
 }
 
 void Menu::searchWithFilters() {
+    cout << "Choose the airlines you want to fly with" << endl
+        <<  "Enter the airline's code or 0 to stop: " << endl;
 
+    set<Airline*> airlines;
+    string airlineCode;
+
+    while(cin >> airlineCode){
+        if (airlineCode == "0") break;
+        Airline* airline = data->getAirline(airlineCode);
+        if (airline == nullptr){
+            cout << "Airline not found!" << endl;
+            continue;
+        }
+        airlines.insert(airline);
+    }
+
+    bestFlightOption(airlines);
 }
 
 
@@ -491,7 +534,7 @@ void Menu::maximumTrip() {
         auto source = pair.first;
         for(auto dest : pair.second) {
             auto route = g->bfs(source, dest);
-            for (int i = 0; i < route.size() - 2; i++) {
+            for (int i = 0; i < route.size() - 1; i++) {
                 cout << route[i] << " -> ";
             }
             cout << route[route.size() - 1] << endl;
