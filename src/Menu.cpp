@@ -128,9 +128,33 @@ void Menu::statistics() {
 
 //Menu options
 void Menu::bestFlightOption() {
+    int choice;
+    cout << "Choose the option for best flight:" << endl;
+    cout << "1. By airport codes" << endl;
+    cout << "2. By cities" << endl;
+    cout << "3. By geographic coordinates" << endl;
+    cout << "Enter your choice (1-3): ";
+    cin >> choice;
+
+    switch (choice) {
+        case 1:
+            bestFlightOptionByAirportCodes();
+            break;
+        case 2:
+            bestFlightOptionByCities();
+            break;
+        case 3:
+            bestFlightOptionByCoordinates();
+            break;
+        default:
+            cout << "Invalid choice. Exiting..." << endl;
+    }
+}
+
+void Menu::bestFlightOptionByAirportCodes() {
     string source;
     string dest;
-    cout << "Choose origin airport: ";
+    cout << "Choose origin airport code: ";
     cin >> source;
     Airport* a1 = data->getAirport(source);
     if (a1 == nullptr){
@@ -138,7 +162,7 @@ void Menu::bestFlightOption() {
         return;
     }
 
-    cout << "Choose destination airport: ";
+    cout << "Choose destination airport code: ";
     cin >> dest;
     Airport* a2 = data->getAirport(dest);
     if (a2 == nullptr){
@@ -146,18 +170,80 @@ void Menu::bestFlightOption() {
         return;
     }
 
+    displayBestRoute(a1, a2);
+}
+
+void Menu::bestFlightOptionByCities() {
+    string sourceCity;
+    string destCity;
+
+    cout << "Enter the origin city: ";
+    cin.ignore();
+    getline(cin, sourceCity);
+
+    cout << "Enter the destination city: ";
+    getline(cin, destCity);
+
+    // Implement logic to find airports based on cities
+    // You can use data->getAirportByCity() or a similar method
+
+    Airport* a1 = data->getAirportByCity(sourceCity);
+    Airport* a2 = data->getAirportByCity(destCity);
+
+    if (a1 == nullptr || a2 == nullptr) {
+        cout << "Airport not found for one or both cities!" << endl;
+        return;
+    }
+
+    displayBestRoute(a1, a2);
+}
+
+void Menu::bestFlightOptionByCoordinates() {
+    // Implement logic to get the geographic coordinates from the user
+    // You can prompt for latitude and longitude
+
+    double sourceLatitude, sourceLongitude, destLatitude, destLongitude;
+
+    cout << "Enter the latitude of the origin: ";
+    cin >> sourceLatitude;
+
+    cout << "Enter the longitude of the origin: ";
+    cin >> sourceLongitude;
+
+    cout << "Enter the latitude of the destination: ";
+    cin >> destLatitude;
+
+    cout << "Enter the longitude of the destination: ";
+    cin >> destLongitude;
+
+    // Implement logic to find airports based on coordinates
+    // You can use data->getAirportByCoordinates() or a similar method
+
+    Airport* a1 = data->getAirportByCoordinates(sourceLatitude, sourceLongitude);
+    Airport* a2 = data->getAirportByCoordinates(destLatitude, destLongitude);
+
+    if (a1 == nullptr || a2 == nullptr) {
+        cout << "Airport not found for one or both coordinates!" << endl;
+        return;
+    }
+
+    displayBestRoute(a1, a2);
+}
+
+void Menu::displayBestRoute(Airport* a1, Airport* a2) {
     Vertex* s = g->findVertex(a1);
     Vertex* d = g->findVertex(a2);
     vector<pair<string, double>> bestRoute = g->dijkstra(s, d);
 
-    cout << endl << "The best route from " << source << " to " << dest << " goes through:" << endl << endl;
+    cout << endl << "The best route from " << a1->getCode() << " to " << a2->getCode() << " goes through:" << endl << endl;
     cout << bestRoute[0].first << "->";
-    for (int i = 1;  i < bestRoute.size() - 2; i++){
+    for (int i = 1; i < bestRoute.size() - 1; i++) {
         cout << bestRoute[i].first << "->";
     }
     cout << bestRoute[bestRoute.size() - 1].first << endl << endl;
     cout << "And travels a distance of " << bestRoute[bestRoute.size() - 1].second << " KM" << endl;
 }
+
 
 void Menu::searchWithFilters() {
 

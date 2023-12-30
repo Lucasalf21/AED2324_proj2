@@ -32,6 +32,13 @@ public:
     void maximumTrip();
     void topAirports();
 
+    void bestFlightOptionByAirportCodes();
+
+    void bestFlightOptionByCities();
+
+    void bestFlightOptionByCoordinates();
+
+    void displayBestRoute(Airport *a1, Airport *a2);
 };
 
 

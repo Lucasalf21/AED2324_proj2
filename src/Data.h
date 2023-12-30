@@ -28,7 +28,8 @@ public:
     set<Airport*> getAirports();
     set<Airline*> getAirlines();
     set<Flight*> getFlights();
-    Airport* getAirportByCity(const string& city) const;
+    Airport *getAirportByCity(const string& city) const;
+    Airport *getAirportByCoordinates(float latitude, float longitude) const;
 };
 
 

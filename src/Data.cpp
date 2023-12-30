@@ -24,13 +24,22 @@ Airport *Data::getAirport(string code) {
     return nullptr;
 }
 
-Airport* Data::getAirportByCity(const string& city) const {
+Airport *Data::getAirportByCity(const string& city) const {
     for (auto airport : airports) {
         if (airport->getCity() == city) {
             return airport;
         }
     }
     return nullptr; // If no airport is found for the given city
+}
+
+Airport* Data::getAirportByCoordinates(float latitude, float longitude) const {
+    for (auto airport : airports) {
+        if (airport->getLatitude() == latitude && airport->getLongitude() == longitude) {
+            return airport;
+        }
+    }
+    return nullptr;  // Airport not found with the given coordinates
 }
 
 Airline *Data::getAirline(string code) {
