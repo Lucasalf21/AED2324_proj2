@@ -24,6 +24,15 @@ Airport *Data::getAirport(string code) {
     return nullptr;
 }
 
+Airport* Data::getAirportByCity(const string& city) const {
+    for (auto airport : airports) {
+        if (airport->getCity() == city) {
+            return airport;
+        }
+    }
+    return nullptr; // If no airport is found for the given city
+}
+
 Airline *Data::getAirline(string code) {
     for(auto airline : airlines) {
         if(airline->getCode() == code) {

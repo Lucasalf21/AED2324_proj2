@@ -130,7 +130,7 @@ void Menu::statistics() {
 void Menu::bestFlightOption() {
     string source;
     string dest;
-    cout << "Choose origin aiport: ";
+    cout << "Choose origin airport: ";
     cin >> source;
     Airport* a1 = data->getAirport(source);
     if (a1 == nullptr){
