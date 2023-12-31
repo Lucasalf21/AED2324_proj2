@@ -246,10 +246,19 @@ set<Vertex*> Graph::findArticulationPoints() {
     return articulationPoints;
 }
 
-set<Airport*> Graph::getAirportsByCity(string city) {
+set<Airport*> Graph::getAirportsByCity(string city, string country) {
     set<Airport*> airports;
+    if (country.empty()) {
+        for (auto &v: vertexSet) {
+            if (v->info->getCity() == city) {
+                airports.insert(v->info);
+            }
+        }
+        return airports;
+    }
+
     for (auto& v : vertexSet) {
-        if (v->info->getCity() == city) {
+        if (v->info->getCity() == city && v->info->getCountry() == country) {
             airports.insert(v->info);
         }
     }

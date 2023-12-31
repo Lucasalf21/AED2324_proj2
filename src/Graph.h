@@ -48,11 +48,9 @@ public:
     Vertex* findVertex(Airport* v);
     set<Vertex*> findArticulationPoints();
 
-    void dfsArticulationPoints(Vertex *u, Vertex *parent, set<Vertex *> &articulationPoints,
-                               unordered_map<Vertex *, int> &disc, unordered_map<Vertex *, int> &low,
-                               int &time);
+    void dfsArticulationPoints(Vertex *u, Vertex *parent, set<Vertex *> &articulationPoints, unordered_map<Vertex *, int> &disc, unordered_map<Vertex *, int> &low, int &time);
 
-    set<Airport*> getAirportsByCity(string city);
+    set<Airport*> getAirportsByCity(string city, string country = "");
     Airport* getNearestAirportByCoordinates(double latitude, double longitude);
 };
 

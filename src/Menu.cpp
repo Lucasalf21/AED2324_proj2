@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <map>
 #include <climits>
+#include <unistd.h>
 
 using namespace std;
 
@@ -19,11 +20,11 @@ Menu::Menu(Data* data, Graph* graph){
         cout << endl << " __________________________________________________ " << endl
              << " 1 - Statistics" << endl
              << " 2 - Find the best flight option" << endl
-             << " 3 - Search with filters" << endl
-             << endl
+             << " 3 - Search with filters" << endl << endl
+
              << " 0 - Exit " << endl
-             << " __________________________________________________ " << endl
-             << endl
+             << " __________________________________________________ " << endl << endl
+
              << "Choose the desired option: ";
         cin >> choice;
         cout << endl;
@@ -46,95 +47,19 @@ Menu::Menu(Data* data, Graph* graph){
     }
 }
 
-void Menu::statistics() {
-    int choice = 1;
-
-    while (choice != 69){
-        cout << " __________________________________________________ " << endl
-             << " 1 - Global number of airports " << endl
-             << " 2 - Global number of airlines" << endl
-             << " 3 - Global number of flights" << endl
-             << " 4 - Flights out of an airport" << endl
-             << " 5 - Flights from an airline" << endl
-             << " 6 - Number of flights per city" << endl
-             << " 7 - Number of flights per airline" << endl
-             << " 8 - Countries an airport flies to" << endl
-             << " 9 - Countries a city flies to" << endl
-             << " 10 - Destinations available for an airport" << endl
-             << " 11 - Reachable destinations from an airport in a number of stops" << endl
-             << " 12 - Maximum trip (?)" << endl
-             << " 13 - Top airports with greatest air traffic capacity" << endl
-             << " 14 - Number of essential airports to the network" << endl
-             << endl
-             << " 69 - Go back" << endl
-             << " 0 - Exit" << endl
-             << " __________________________________________________ " << endl
-             << endl
-             << "Choose the desired option: ";
-        cin >> choice;
-
-        switch (choice) {
-            case 1:
-                globalNumAirports();
-                break;
-            case 2:
-                globalNumAirlines();
-                break;
-            case 3:
-                globalNumFlights();
-                break;
-            case 4:
-                flightsFromAirport();
-                break;
-            case 5:
-                flightsFromAirline();
-                break;
-            case 6:
-                numberOfFlightsAirport();
-                break;
-            case 7:
-                numberOfFlightsAirline();
-                break;
-            case 8:
-                countriesFliesToAirport();
-                break;
-            case 9:
-                countriesFliesToCity();
-                break;
-            case 10:
-                destinationsAvailableAirport(); //Fiz mas nao consegui testar
-                break;
-            case 11:
-                reachableDestinationsAirport(); //Fiz mas nao consegui testar
-                break;
-            case 12:
-                maximumTrip();
-                break;
-            case 13:
-                topAirports();
-                break;
-            case 14:
-                essentialAirports(); //TODO
-                break;
-            case 69:
-                return;
-            case 0:
-                exit(0);
-            default:
-                cout << "Invalid option!" << endl;
-        }
-    }
-}
-
 //Menu options
 void Menu::bestFlightOption(set<Airline*> airlines) {
-    cout << "Choose the type of destination:" << endl
+    cout << "___________________BEST FLIGHT OPTION____________________" << endl
+         << "Choose the type of destination:" << endl << endl
          << "1 - Airport" << endl
          << "2 - City" << endl
          << "3 - Coordinates" << endl << endl
-         << "9 - Go back" << endl
-         << "0 - Exit" << endl << endl
-         << "Option: ";
+
+         << "b - Go back" << endl
+         << "0 - Exit" << endl
+         << " ________________________________________________________ " << endl << endl
+
+         << " Choose the desired option: ";
     char choice;
     cin >> choice;
     cout << endl;
@@ -148,13 +73,17 @@ void Menu::bestFlightOption(set<Airline*> airlines) {
         case '3':
             bestFlightOptionByCoordinates(airlines);
             break;
-        case '9':
+        case 'b':
             return;
         case '0':
             exit(0);
         default:
             cout << "Invalid choice!" << endl;
     }
+    cout << "Press enter to continue..."
+         << endl;
+    cin.ignore();
+    cin.get();
 }
 
 void Menu::bestFlightOptionByAirport(set<Airline *> airlines) {
@@ -228,7 +157,8 @@ void Menu::bestFlightOptionByCity(set<Airline *> airlines) {
     cout << "Choose origin city: ";
     cin.ignore();
     getline(cin, source);
-    set<Airport*> a1 = g->getAirportsByCity(source);
+    string country = checkCountry(source);
+    set<Airport*> a1 = g->getAirportsByCity(source, country);
     if (a1.empty()){
         cout << "Airport not found!" << endl;
         return;
@@ -236,7 +166,8 @@ void Menu::bestFlightOptionByCity(set<Airline *> airlines) {
 
     cout << "Choose destination city: ";
     getline(cin, dest);
-    set<Airport*> a2 = g->getAirportsByCity(dest);
+    string country2 = checkCountry(dest);
+    set<Airport*> a2 = g->getAirportsByCity(dest, country2);
     if (a2.empty()){
         cout << "Airport not found!" << endl;
         return;
@@ -395,20 +326,192 @@ void Menu::searchWithFilters() {
     bestFlightOption(airlines);
 }
 
+//statistics menu
+void Menu::statistics() {
+    char choice = '1';
 
-//Statistics
-void Menu::globalNumAirports() {
-    cout << endl << "Number of airports: " << data->numberAirports() << endl << endl;
+    while (true){
+        cout << " _______________________STATISTICS_______________________ " << endl
+             << " 1 - Global number of airports/flights" << endl
+             << " 2 - Number of flights out of an airport " << endl
+             << " 3 - Number of flights per city/airline " << endl
+             << " 4 - Number of countries a airport/city flies to " << endl
+             << " 5 - Number of destinations available from an airport " << endl
+             << " 6 - Number of reachable destinations from an airport in a maximum number of lay-overs " << endl
+             << " 7 - Maximum trip " << endl
+             << " 8 - Top airports with greatest air traffic capacity " << endl
+             << " 9 - Number of essential airports " << endl << endl
+
+             << " b - Go back" << endl
+             << " 0 - Exit" << endl
+             << " ________________________________________________________ " << endl << endl
+
+             << "Choose the desired option: ";
+        cin >> choice;
+
+        switch (choice) {
+            case '1':
+                choice1();
+                break;
+            case '2':
+                choice2();
+                break;
+            case '3':
+                choice3();
+                break;
+            case '4':
+                choice4();
+                break;
+            case '5':
+                choice5();
+                break;
+            case '6':
+                choice6();
+                break;
+            case '7':
+                choice7();
+                break;
+            case '8':
+                choice8();
+                break;
+            case '9':
+                choice9();
+                break;
+
+            case 'b':
+                return;
+            case '0':
+                exit(0);
+            default:
+                cout << "Invalid option!" << endl;
+        }
+    }
 }
 
-void Menu::globalNumAirlines() {
-    cout << endl << "Number of airlines: " << data->numberAirlines() << endl << endl;
+//Statistics options
+void Menu::choice1() {
+    cout << "Would you like to see the global number of airports(1) or the number of available flights(2)?" << endl;
+    char choice;
+    cout << "Option: ";
+    cin >> choice;
+    switch (choice) {
+        case '1':
+            globalNumAirports();
+            break;
+        case '2':
+            globalNumFlights();
+            break;
+        default:
+            cout << "Invalid choice!" << endl;
+    }
+    cout << "Press enter to continue..."
+            << endl;
+    cin.ignore();
+    cin.get();
+}
+
+void Menu::choice2() {
+    flightsFromAirport();
+    cout << "Press enter to continue..."
+         << endl;
+    cin.ignore();
+    cin.get();
+}
+
+void Menu::choice3() {
+    cout << "Would you like to see the number of flights per city(1) or per airline(2)?" << endl;
+    char choice;
+    cout << "Option: ";
+    cin >> choice;
+    switch (choice) {
+        case '1':
+            flightsFromCity();
+            break;
+        case '2':
+            flightsFromAirline();
+            break;
+        default:
+            cout << "Invalid choice!" << endl;
+    }
+    cout << "Press enter to continue..."
+         << endl;
+    cin.ignore();
+    cin.get();
+}
+
+void Menu::choice4() {
+    cout << "Would you like to see the number of countries an airport(1) or a city(2) flies to?" << endl;
+    char choice;
+    cout << "Option: ";
+    cin >> choice;
+    switch (choice) {
+        case '1':
+            countriesAnAirportFliesTo();
+            break;
+        case '2':
+            countriesACityFliesTo();
+            break;
+        default:
+            cout << "Invalid choice!" << endl;
+    }
+    cout << "Press enter to continue..."
+         << endl;
+    cin.ignore();
+    cin.get();
+}
+
+void Menu::choice5() {
+    destinationsAvailableForAnAirport();
+    cout << "Press enter to continue..."
+         << endl;
+    cin.ignore();
+    cin.get();
+}
+
+void Menu::choice6() {
+    reachableDestinationsAirport();
+    cout << "Press enter to continue..."
+         << endl;
+    cin.ignore();
+    cin.get();
+}
+
+void Menu::choice7() {
+    maximumTrip();
+    cout << "Press enter to continue..."
+         << endl;
+    cin.ignore();
+    cin.get();
+}
+
+void Menu::choice8() {
+    topAirports();
+    cout << "Press enter to continue..."
+         << endl;
+    cin.ignore();
+    cin.get();
+}
+
+void Menu::choice9() {
+    essentialAirports();
+    cout << "Press enter to continue..."
+         << endl;
+    cin.ignore();
+    cin.get();
+}
+
+//Statistics
+
+//choice 1
+void Menu::globalNumAirports() {
+    cout << endl << "Number of airports: " << data->numberAirports() << endl << endl;
 }
 
 void Menu::globalNumFlights() {
     cout << endl << "Number of flights: " << data->numberFlights() << endl << endl;
 }
 
+//choice 2
 void Menu::flightsFromAirport() {
     cout << endl << "Enter the desired airport's code: " << endl;
     string sourceCode;
@@ -420,6 +523,8 @@ void Menu::flightsFromAirport() {
         return;
     }
 
+    int count = 0;
+    set<Airline*> airlines;
     Vertex* airport = g->findVertex(source);
     for (auto& e : airport->adj){
         Airport* destination = data->getAirport(e.dest->info->getCode());
@@ -428,55 +533,54 @@ void Menu::flightsFromAirport() {
              << " --> "
              << destination->getCountry() << " - " << destination->getCity() << " (" << destination->getName() << " - " << destination->getCode() << ")"
              << " | " << airline->getName() << " (" << airline->getCode() << ")" << endl;
+        count++;
+        airlines.insert(airline);
     }
+
+    cout << endl << "Number of flights: " << count << endl << "From " << airlines.size() << " airlines" << endl << endl;
+}
+
+//choice 3
+void Menu::flightsFromCity() {
+    cout << endl << "Enter the desired city's name: " << endl;
+    string cityName;
+    cin.ignore();
+    getline(cin, cityName);
+    string cityCountry = checkCountry(cityName);
+    int count = 0;
+    set<Airport*> airports = g->getAirportsByCity(cityName, cityCountry);
+    for (auto a : airports){
+        Vertex* airport = g->findVertex(a);
+        for (auto& e : airport->adj){
+            Airport* destination = data->getAirport(e.dest->info->getCode());
+            Airline* airline = data->getAirline(e.airline->getCode());
+            cout << a->getCountry() << " - " << a->getCity() << " (" << a->getName() << " - " << a->getCode() << ")"
+                 << " --> "
+                 << destination->getCountry() << " - " << destination->getCity() << " (" << destination->getName() << " - " << destination->getCode() << ")"
+                 << " | " << airline->getName() << " (" << airline->getCode() << ")" << endl;
+            count++;
+        }
+    }
+
+    cout << endl << "Number of flights: " << count << endl << endl;
 }
 
 void Menu::flightsFromAirline() {
     cout << endl << "Enter the desired airline's code: " << endl;
     string airlineCode;
     cin >> airlineCode;
+    int count = 0;
     for(auto flight : data->getFlights()) {
         if(flight->getAirline()->getCode() == airlineCode) {
             flight->printFlight();
+            count++;
         }
     }
-    cout << endl;
+    cout << endl << "Number of flights: " << count << endl << endl;
 }
 
-void Menu::numberOfFlightsAirport() {
-    cout << endl << "Enter the desired airport's code: " << endl;
-    string sourceCode;
-    cin >> sourceCode;
-    Airport* source = data->getAirport(sourceCode);
-    if (source == nullptr){
-        cout << endl << "Airport not found!" << endl;
-        return;
-    }
-
-    Vertex* airport = g->findVertex(source);
-    int counter = 0;
-
-    for (auto& e : airport->adj){
-        counter++;
-    }
-
-    cout << endl << "Number of flights: " << counter << endl << endl;
-}
-
-void Menu::numberOfFlightsAirline() {
-    cout << endl << "Enter the desired airline's code: " << endl;
-    string airlineCode;
-    cin >> airlineCode;
-    int counter = 0;
-    for(auto flight : data->getFlights()) {
-        if(flight->getAirline()->getCode() == airlineCode) {
-            counter++;
-        }
-    }
-    cout << endl << "Number of flights: " << counter << endl << endl;
-}
-
-void Menu::countriesFliesToAirport() {
+//choice 4
+void Menu::countriesAnAirportFliesTo() {
     cout << endl << "Enter the desired airport's code: " << endl;
     string sourceCode;
     cin >> sourceCode;
@@ -495,10 +599,10 @@ void Menu::countriesFliesToAirport() {
     for (auto& c : countries){
         cout << c << endl;
     }
-    cout << endl;
+    cout << endl << "Number of countries: " << countries.size() << endl << endl;
 }
 
-void Menu::countriesFliesToCity() {
+void Menu::countriesACityFliesTo() {
     cout << endl << "Enter the desired city's name: " << endl;
     string cityName;
     cin.ignore();
@@ -519,7 +623,7 @@ void Menu::countriesFliesToCity() {
         cout << country << endl;
     }
 
-    cout << endl;
+    cout << endl << "Number of countries: " << countries.size() << endl << endl;
 }
 
 string Menu::checkCountry(string cityName) {
@@ -539,7 +643,8 @@ string Menu::checkCountry(string cityName) {
     return countryName;
 }
 
-void Menu::destinationsAvailableAirport() {
+//choice 5
+void Menu::destinationsAvailableForAnAirport() {
     string airportCode;
     cout << endl << "Enter the desired airport's code: " << endl;
     cin >> airportCode;
@@ -590,9 +695,10 @@ void Menu::destinationsAvailableAirport() {
     }
 
     // Print the total number of unique destinations
-    cout << "Total number of unique destinations: " << uniqueDestinations.size() << endl;
+    cout << endl << "Number of destinations: " << uniqueDestinations.size() << endl << endl;
 }
 
+//choice 6
 void Menu::reachableDestinationsAirport() {
     string airportCode;
     cout << endl << "Enter the desired airport's code: " << endl;
@@ -619,14 +725,17 @@ void Menu::reachableDestinationsAirport() {
     cout << "Enter your choice (1-3): ";
     cin >> choice;
 
-    // Perform DFS to count reachable destinations within maxStops
-    DFSCountReachableDestinations(airport, 0, maxStops, choice, reachableCount);
+    set<string> res;
 
-    cout << endl << "Number of reachable destinations within " << maxStops << " stops: " << reachableCount << endl;
+    // Perform DFS to count reachable destinations within maxStops
+    DFSCountReachableDestinations(airport, 0, maxStops, choice, reachableCount, res);
+
+    cout << endl << "Number of reachable destinations within " << maxStops << " stops: " << res.size() << endl;
 }
 
 // DFS helper function to count reachable destinations
-void Menu::DFSCountReachableDestinations(Airport* currentAirport, int currentStops, int maxStops, int choice, int& reachableCount) {
+void Menu::DFSCountReachableDestinations(Airport* currentAirport, int currentStops, int maxStops, int choice, int& reachableCount, set<string>& res) {
+
     if (currentStops > maxStops) {
         return;  // Stop DFS if exceeding maximum stops
     }
@@ -637,13 +746,13 @@ void Menu::DFSCountReachableDestinations(Airport* currentAirport, int currentSto
     // Output the type of destination based on user's choice
     switch (choice) {
         case 1:
-            cout << currentAirport->getCode() << " ";  // Airports
+            res.insert(currentAirport->getCode());  // Airports
             break;
         case 2:
-            cout << currentAirport->getCity() << " ";  // Cities
+            res.insert(currentAirport->getCity());  // Cities
             break;
         case 3:
-            cout << currentAirport->getCountry() << " ";  // Countries
+            res.insert(currentAirport->getCountry());  // Countries
             break;
         default:
             cout << "Invalid choice. Exiting..." << endl;
@@ -655,11 +764,12 @@ void Menu::DFSCountReachableDestinations(Airport* currentAirport, int currentSto
     if (currentVertex != nullptr) {
         for (Edge& edge : currentVertex->adj) {
             Airport* nextAirport = edge.dest->info;
-            DFSCountReachableDestinations(nextAirport, currentStops + 1, maxStops, choice, reachableCount);
+            DFSCountReachableDestinations(nextAirport, currentStops + 1, maxStops, choice, reachableCount, res);
         }
     }
 }
 
+//choice 7
 void Menu::maximumTrip() {
     cout << endl << "Do you want to see the maximum trip for a specific airport? (y/n)" << endl;
     char choice;
@@ -694,11 +804,11 @@ void Menu::maximumTrip() {
             return;
         }
 
-        cout << "TESTES: " << endl << "SourceCode inserido: " << sourceCode << endl
-                                    << "Airport: " << airport->getCode() << endl;
+        /*cout << "TESTES: " << endl << "SourceCode inserido: " << sourceCode << endl
+                                    << "Airport: " << airport->getCode() << endl;*/
 
         sources.push_back(g->findVertex(airport));
-        cout << "Sources size: " << sources.size() << endl;
+        //cout << "Sources size: " << sources.size() << endl;
     }
     else {
         cout << "Invalid choice!" << endl;
@@ -730,8 +840,10 @@ void Menu::maximumTrip() {
             cout << route[route.size() - 1] << endl;
         }
     }
+    cout << endl;
 }
 
+//choice 8
 void Menu::topAirports() {
     vector<Airport*> airports;
     for(auto airport : data->getAirports()) {
@@ -749,8 +861,10 @@ void Menu::topAirports() {
     for(int i = 0; i < numAirports; i++) {
         cout << airports[i]->getName() << " (" << airports[i]->getCode() << ") - " << airports[i]->getNumFlights() << " flights" << endl;
     }
+    cout << endl;
 }
 
+//choice 9
 void Menu::essentialAirports() {
     cout << endl << "Number of essential airports: " << g->findArticulationPoints().size() << endl << endl;
 }
