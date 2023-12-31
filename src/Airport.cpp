@@ -42,7 +42,7 @@ Airport::Airport() {    // default constructor
     this->coordinates = make_pair(0, 0);
 }
 
-double Airport::calculateDistance(Airport* dest){
+double Airport::calculateDistance(Airport* dest) const{
     const double earthRadius = 6371.0;
 
     double lat1 = this->getLatitude() * (M_PI / 180.0);
@@ -59,7 +59,7 @@ double Airport::calculateDistance(Airport* dest){
     return earthRadius * c;
 }
 
-double Airport::calculateDistance(double lat, double lon){
+double Airport::calculateDistance(double lat, double lon) const{
     const double earthRadius = 6371.0;
 
     double lat1 = this->getLatitude() * (M_PI / 180.0);
