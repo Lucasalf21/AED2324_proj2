@@ -24,6 +24,7 @@ public:
     float getLatitude() const;
     float getLongitude() const;
     double calculateDistance(Airport* dest);
+    double calculateDistance(double lat, double lon);
     bool operator <(const Airport& airport) const;
     bool operator =(const Airport& airport);
 

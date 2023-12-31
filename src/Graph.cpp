@@ -73,10 +73,6 @@ vector<string> Graph::bfs(Vertex *source, Vertex *dest, set<Airline*> airlines){
 
 set<vector<Vertex*>> Graph::findAllShortestPaths(Vertex* source, Vertex* dest, set<Airline*> airlines) {
     auto maxSize = bfs(source, dest, airlines).size();
-    cout << "Selected Airlines: " << endl;
-    for (auto airline : airlines) {
-        cout << airline->getCode() << " " << airline->getName() << endl;
-    }
     for (auto v : vertexSet) {
         v->visited = false;
     }
@@ -250,3 +246,27 @@ set<Vertex*> Graph::findArticulationPoints() {
     return articulationPoints;
 }
 
+set<Airport*> Graph::getAirportsByCity(string city) {
+    set<Airport*> airports;
+    for (auto& v : vertexSet) {
+        if (v->info->getCity() == city) {
+            airports.insert(v->info);
+        }
+    }
+    return airports;
+}
+
+Airport* Graph::getNearestAirportByCoordinates(double latitude, double longitude) {
+    Airport* nearestAirport = nullptr;
+    double minDistance = DBL_MAX;
+
+    for (auto& v : vertexSet) {
+        double distance = v->info->calculateDistance(latitude, longitude);
+        if (distance < minDistance) {
+            minDistance = distance;
+            nearestAirport = v->info;
+        }
+    }
+
+    return nearestAirport;
+}

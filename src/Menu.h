@@ -15,6 +15,9 @@ public:
     Menu(Data* data, Graph* graph);
     void statistics();
     void bestFlightOption(set<Airline*> airlines = {});
+    void bestFlightOptionByAirport(set<Airline*> airlines = {});
+    void bestFlightOptionByCity(set<Airline*> airlines = {});
+    void bestFlightOptionByCoordinates(set<Airline*> airlines = {});
     void searchWithFilters();
 
     void globalNumAirports();
