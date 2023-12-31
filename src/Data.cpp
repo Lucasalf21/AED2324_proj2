@@ -33,6 +33,15 @@ Airline *Data::getAirline(string code) {
     return nullptr;
 }
 
+Flight *Data::getFlight(Airport *source, Airport *destination, Airline *airline) {
+    for(auto flight : flights) {
+        if(flight->getSource() == source && flight->getDestination() == destination && flight->getAirline() == airline) {
+            return flight;
+        }
+    }
+    return nullptr;
+}
+
 unsigned long Data::numberAirports() {
     return airports.size();
 }
