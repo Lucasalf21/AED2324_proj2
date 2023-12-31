@@ -22,6 +22,7 @@ public:
     void newFlight(Flight* flight);
     Airport* getAirport(string code);
     Airline* getAirline(string code);
+    Flight* getFlight(Airport* source, Airport* destination, Airline* airline);
     unsigned long numberAirports();
     unsigned long numberAirlines();
     unsigned long numberFlights();

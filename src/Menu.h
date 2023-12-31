@@ -14,36 +14,35 @@ public:
 
     Menu(Data* data, Graph* graph);
     void statistics();
-    void bestFlightOption(set<Airline*> airlines = {});
-    void bestFlightOptionByAirport(set<Airline*> airlines = {});
-    void bestFlightOptionByCity(set<Airline*> airlines = {});
-    void bestFlightOptionByCoordinates(set<Airline*> airlines = {});
-    void searchWithFilters();
+    void bestFlightOption(const set<Airline*>& airlines = {}) const;
+    void bestFlightOptionByAirport(const set<Airline*>& airlines = {}) const;
+    void bestFlightOptionByCity(const set<Airline*>& airlines = {}) const;
+    void bestFlightOptionByCoordinates(const set<Airline*>& airlines = {}) const;
+    void searchWithFilters() const;
 
-    void choice1();
-    void choice2();
-    void choice3();
-    void choice4();
-    void choice5();
+    void choice1() const;
+    void choice2() const;
+    void choice3() const;
+    void choice4() const;
+    void choice5() const;
     void choice6();
-    void choice7();
-    void choice8();
-    void choice9();
+    void choice7() const;
+    void choice8() const;
+    void choice9() const;
 
-    void globalNumAirports();
-    void globalNumAirlines();
-    void globalNumFlights();
-    void flightsFromAirport();
-    void flightsFromCity();
-    void flightsFromAirline();
-    void countriesAnAirportFliesTo();
-    void countriesACityFliesTo();
-    string checkCountry(string cityName); // auxiliary function
-    void destinationsAvailableForAnAirport();
+    void globalNumAirports() const;
+    void globalNumFlights() const;
+    void flightsFromAirport() const;
+    void flightsFromCity() const;
+    void flightsFromAirline() const;
+    void countriesAnAirportFliesTo() const;
+    void countriesACityFliesTo() const;
+    string checkCountry(const string& cityName) const; // auxiliary function
+    void destinationsAvailableForAnAirport() const;
     void reachableDestinationsAirport();
-    void maximumTrip();
-    void topAirports();
-    void essentialAirports();
+    void maximumTrip() const;
+    void topAirports() const;
+    void essentialAirports() const;
 
     void DFSCountReachableDestinations(Airport *currentAirport, int currentStops, int maxStops, int choice, int &reachableCount, set<string>& res);
 };
