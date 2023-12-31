@@ -33,10 +33,10 @@ Menu::Menu(Data* data, Graph* graph){
                 statistics();
                 break;
             case 2:
-                bestFlightOption(); //TODO
+                bestFlightOption();
                 break;
             case 3:
-                searchWithFilters(); //TODO
+                searchWithFilters();
                 break;
             case 0:
                 break;
@@ -79,8 +79,7 @@ void Menu::bestFlightOption(const set<Airline*>& airlines) const {
         default:
             cout << "Invalid choice!" << endl;
     }
-    cout << "Press enter to continue..."
-         << endl;
+    cout << "Press enter to continue...";
     cin.ignore();
     cin.get();
 }
@@ -411,8 +410,7 @@ void Menu::choice1() const {
 
 void Menu::choice2() const {
     flightsFromAirport();
-    cout << "Press enter to continue..."
-         << endl;
+    cout << "Press enter to continue...";
     cin.ignore();
     cin.get();
 }
@@ -432,8 +430,7 @@ void Menu::choice3() const {
         default:
             cout << "Invalid choice!" << endl;
     }
-    cout << "Press enter to continue..."
-         << endl;
+    cout << "Press enter to continue...";
     cin.ignore();
     cin.get();
 }
@@ -453,48 +450,42 @@ void Menu::choice4() const {
         default:
             cout << "Invalid choice!" << endl;
     }
-    cout << "Press enter to continue..."
-         << endl;
+    cout << "Press enter to continue...";
     cin.ignore();
     cin.get();
 }
 
 void Menu::choice5() const {
     destinationsAvailableForAnAirport();
-    cout << "Press enter to continue..."
-         << endl;
+    cout << "Press enter to continue...";
     cin.ignore();
     cin.get();
 }
 
 void Menu::choice6() {
     reachableDestinationsAirport();
-    cout << "Press enter to continue..."
-         << endl;
+    cout << "Press enter to continue...";
     cin.ignore();
     cin.get();
 }
 
 void Menu::choice7() const {
     maximumTrip();
-    cout << "Press enter to continue..."
-         << endl;
+    cout << "Press enter to continue...";
     cin.ignore();
     cin.get();
 }
 
 void Menu::choice8() const {
     topAirports();
-    cout << "Press enter to continue..."
-         << endl;
+    cout << "Press enter to continue...";
     cin.ignore();
     cin.get();
 }
 
 void Menu::choice9() const {
     essentialAirports();
-    cout << "Press enter to continue..."
-         << endl;
+    cout << "Press enter to continue...";
     cin.ignore();
     cin.get();
 }
