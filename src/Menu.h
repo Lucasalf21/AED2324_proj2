@@ -20,25 +20,32 @@ public:
     void bestFlightOptionByCoordinates(set<Airline*> airlines = {});
     void searchWithFilters();
 
+    void choice1();
+    void choice2();
+    void choice3();
+    void choice4();
+    void choice5();
+    void choice6();
+    void choice7();
+    void choice8();
+    void choice9();
+
     void globalNumAirports();
     void globalNumAirlines();
     void globalNumFlights();
     void flightsFromAirport();
+    void flightsFromCity();
     void flightsFromAirline();
-    void numberOfFlightsAirport();
-    void numberOfFlightsAirline();
-    void countriesFliesToAirport();
-    void countriesFliesToCity();
+    void countriesAnAirportFliesTo();
+    void countriesACityFliesTo();
     string checkCountry(string cityName); // auxiliary function
-    void destinationsAvailableAirport();
+    void destinationsAvailableForAnAirport();
     void reachableDestinationsAirport();
     void maximumTrip();
     void topAirports();
     void essentialAirports();
 
-    void
-    DFSCountReachableDestinations(Airport *currentAirport, int currentStops, int maxStops, int choice,
-                                  int &reachableCount);
+    void DFSCountReachableDestinations(Airport *currentAirport, int currentStops, int maxStops, int choice, int &reachableCount, set<string>& res);
 };
 
 
