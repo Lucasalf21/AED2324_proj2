@@ -246,7 +246,7 @@ set<Vertex*> Graph::findArticulationPoints() {
     return articulationPoints;
 }
 
-set<Airport*> Graph::getAirportsByCity(string city, string country) {
+set<Airport*> Graph::getAirportsByCity(const string& city, const string& country) {
     set<Airport*> airports;
     if (country.empty()) {
         for (auto &v: vertexSet) {

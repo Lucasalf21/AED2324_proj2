@@ -20,12 +20,9 @@ public:
     void newAirport(Airport* airport);
     void newAirline(Airline* airline);
     void newFlight(Flight* flight);
-    Airport* getAirport(string code);
-    Airline* getAirline(string code);
+    Airport* getAirport(const string& code);
+    Airline* getAirline(const string& code);
     Flight* getFlight(Airport* source, Airport* destination, Airline* airline);
-    unsigned long numberAirports();
-    unsigned long numberAirlines();
-    unsigned long numberFlights();
     set<Airport*> getAirports();
     set<Airline*> getAirlines();
     set<Flight*> getFlights();

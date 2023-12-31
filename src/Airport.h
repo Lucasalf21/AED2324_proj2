@@ -23,8 +23,8 @@ public:
     int getNumFlights() const;
     float getLatitude() const;
     float getLongitude() const;
-    double calculateDistance(Airport* dest);
-    double calculateDistance(double lat, double lon);
+    double calculateDistance(Airport* dest) const;
+    double calculateDistance(double lat, double lon) const;
     bool operator <(const Airport& airport) const;
     bool operator =(const Airport& airport);
 

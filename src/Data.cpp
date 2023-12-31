@@ -15,7 +15,7 @@ void Data::newFlight(Flight *flight) {
     flights.insert(flight);
 }
 
-Airport *Data::getAirport(string code) {
+Airport *Data::getAirport(const string& code) {
     for(auto airport : airports) {
         if(airport->getCode() == code) {
             return airport;
@@ -24,7 +24,7 @@ Airport *Data::getAirport(string code) {
     return nullptr;
 }
 
-Airline *Data::getAirline(string code) {
+Airline *Data::getAirline(const string& code) {
     for(auto airline : airlines) {
         if(airline->getCode() == code) {
             return airline;
@@ -40,18 +40,6 @@ Flight *Data::getFlight(Airport *source, Airport *destination, Airline *airline)
         }
     }
     return nullptr;
-}
-
-unsigned long Data::numberAirports() {
-    return airports.size();
-}
-
-unsigned long Data::numberAirlines() {
-    return airlines.size();
-}
-
-unsigned long Data::numberFlights() {
-    return flights.size();
 }
 
 set<Airport*> Data::getAirports() {
