@@ -51,6 +51,9 @@ public:
     void dfsArticulationPoints(Vertex *u, Vertex *parent, set<Vertex *> &articulationPoints,
                                unordered_map<Vertex *, int> &disc, unordered_map<Vertex *, int> &low,
                                int &time);
+
+    set<Airport*> getAirportsByCity(string city);
+    Airport* getNearestAirportByCoordinates(double latitude, double longitude);
 };
 
 #endif //AED2324_PROJ2_GRAPH_H

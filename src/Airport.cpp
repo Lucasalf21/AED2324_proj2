@@ -59,6 +59,23 @@ double Airport::calculateDistance(Airport* dest){
     return earthRadius * c;
 }
 
+double Airport::calculateDistance(double lat, double lon){
+    const double earthRadius = 6371.0;
+
+    double lat1 = this->getLatitude() * (M_PI / 180.0);
+    double long1 = this->getLongitude() * (M_PI / 180.0);
+    double lat2 = lat * (M_PI / 180.0);
+    double long2 = lon * (M_PI / 180.0);
+
+    double dlat = lat2 - lat1;
+    double dlong = long2 - long1;
+
+    double a = sin(dlat / 2.0) * sin(dlat / 2.0) + cos(lat1) * cos(lat2) * sin(dlong / 2.0) * sin(dlong / 2.0);
+    double c = 2.0 * atan2(sqrt(a), sqrt(1.0 - a));
+
+    return earthRadius * c;
+}
+
 bool Airport::operator<(const Airport &airport) const {
     return this->code < airport.code;
 }

@@ -6,6 +6,7 @@
 #include <iostream>
 #include <algorithm>
 #include <map>
+#include <climits>
 
 using namespace std;
 
@@ -127,10 +128,40 @@ void Menu::statistics() {
 
 //Menu options
 void Menu::bestFlightOption(set<Airline*> airlines) {
+    cout << "Choose the type of destination:" << endl
+         << "1 - Airport" << endl
+         << "2 - City" << endl
+         << "3 - Coordinates" << endl << endl
+         << "9 - Go back" << endl
+         << "0 - Exit" << endl << endl
+         << "Option: ";
+    char choice;
+    cin >> choice;
+    cout << endl;
+    switch (choice) {
+        case '1':
+            bestFlightOptionByAirport(airlines);
+            break;
+        case '2':
+            bestFlightOptionByCity(airlines);
+            break;
+        case '3':
+            bestFlightOptionByCoordinates(airlines);
+            break;
+        case '9':
+            return;
+        case '0':
+            exit(0);
+        default:
+            cout << "Invalid choice!" << endl;
+    }
+}
+
+void Menu::bestFlightOptionByAirport(set<Airline *> airlines) {
     bool filtered = !airlines.empty();
     string source;
     string dest;
-    cout << "Choose origin aiport: ";
+    cout << "Choose origin airport: ";
     cin >> source;
     Airport* a1 = data->getAirport(source);
     if (a1 == nullptr){
@@ -149,6 +180,165 @@ void Menu::bestFlightOption(set<Airline*> airlines) {
     Vertex* s = g->findVertex(a1);
     Vertex* d = g->findVertex(a2);
     set<vector<Vertex *>> bestRoutes = g->findAllShortestPaths(s, d, airlines);
+
+    cout << "Selected Airlines: " << endl;
+    for (auto airline : airlines) {
+        cout << airline->getCode() << " " << airline->getName() << endl;
+    }
+
+    if (bestRoutes.empty()) {
+        if (filtered)
+            cout << endl << "There are no routes from " << a1->getName() << " to " << a2->getName()
+                 << " with the selected airlines." << endl << endl;
+        else
+            cout << endl << "There are no routes from " << a1->getName() << " to " << a2->getName() << "." << endl
+                 << endl;
+
+        return;
+    }
+
+    if (bestRoutes.size() > 1) {
+        cout << endl << "The best routes from " << a1->getName() << " to " << a2->getName();
+        if(filtered)
+            cout << " with the selected airlines";
+        cout << " go through:" << endl << endl;
+    }
+    else {
+        cout << endl << "The best route from " << a1->getName() << " to " << a2->getName();
+        if(filtered)
+            cout << " with the selected airlines";
+        cout << " goes through:" << endl << endl;
+    }
+
+    for(auto& route : bestRoutes) {
+        cout << route[0]->info->getCode() << "->";
+        for (int i = 1; i < route.size() - 1; i++) {
+            cout << route[i]->info->getCode() << "->";
+        }
+        cout << route[route.size() - 1]->info->getCode() << endl;
+    }
+
+    cout << endl;
+}
+
+void Menu::bestFlightOptionByCity(set<Airline *> airlines) {
+    bool filtered = !airlines.empty();
+    string source;
+    string dest;
+    cout << "Choose origin city: ";
+    cin.ignore();
+    getline(cin, source);
+    set<Airport*> a1 = g->getAirportsByCity(source);
+    if (a1.empty()){
+        cout << "Airport not found!" << endl;
+        return;
+    }
+
+    cout << "Choose destination city: ";
+    getline(cin, dest);
+    set<Airport*> a2 = g->getAirportsByCity(dest);
+    if (a2.empty()){
+        cout << "Airport not found!" << endl;
+        return;
+    }
+
+    set<vector<Vertex *>> bestRoutes;
+    int minSize = INT_MAX;
+
+    for (auto airport1 : a1){
+        for (auto airport2 : a2){
+            Vertex* s = g->findVertex(airport1);
+            Vertex* d = g->findVertex(airport2);
+            set<vector<Vertex *>> routes = g->findAllShortestPaths(s, d, airlines);
+            bestRoutes.insert(routes.begin(), routes.end());
+        }
+    }
+
+    for (auto route : bestRoutes){
+        if (route.size() < minSize){
+            minSize = route.size();
+        }
+    }
+
+    for (auto it = bestRoutes.begin(); it != bestRoutes.end();){
+        if ((*it).size() > minSize){
+            it = bestRoutes.erase(it);
+        }
+        else{
+            it++;
+        }
+    }
+
+    cout << "Selected Airlines: " << endl;
+    for (auto airline : airlines) {
+        cout << airline->getCode() << " " << airline->getName() << endl;
+    }
+
+    if (bestRoutes.empty()) {
+        if (filtered)
+            cout << endl << "There are no routes from " << source << " to " << dest
+                 << " with the selected airlines." << endl << endl;
+        else
+            cout << endl << "There are no routes from " << source << " to " << dest << "." << endl
+                 << endl;
+
+        return;
+    }
+
+    if (bestRoutes.size() > 1) {
+        cout << endl << "The best routes from " << source << " to " << dest;
+        if(filtered)
+            cout << " with the selected airlines";
+        cout << " go through:" << endl << endl;
+    }
+    else {
+        cout << endl << "The best route from " << source << " to " << dest;
+        if(filtered)
+            cout << " with the selected airlines";
+        cout << " goes through:" << endl << endl;
+    }
+
+    for(auto& route : bestRoutes) {
+        cout << route[0]->info->getCode() << "->";
+        for (int i = 1; i < route.size() - 1; i++) {
+            cout << route[i]->info->getCode() << "->";
+        }
+        cout << route[route.size() - 1]->info->getCode() << endl;
+    }
+
+    cout << endl;
+}
+
+void Menu::bestFlightOptionByCoordinates(set<Airline *> airlines) {
+    bool filtered = !airlines.empty();
+    double sourceLat;
+    double sourceLong;
+    double destLat;
+    double destLong;
+    cout << "Choose origin coordinates: ";
+    cin >> sourceLat >> sourceLong;
+    Airport* a1 = g->getNearestAirportByCoordinates(sourceLat, sourceLong);
+    if (a1 == nullptr){
+        cout << "Airport not found!" << endl;
+        return;
+    }
+
+    cout << "Choose destination coordinates: ";
+    cin >> destLat >> destLong;
+    Airport* a2 = g->getNearestAirportByCoordinates(destLat, destLong);
+    if (a2 == nullptr){
+        cout << "Airport not found!" << endl;
+        return;
+    }
+
+    Vertex* s = g->findVertex(a1);
+    Vertex* d = g->findVertex(a2);
+    set<vector<Vertex *>> bestRoutes = g->findAllShortestPaths(s, d, airlines);
+
+    cout << "Selected Airlines: " << endl;
+    for (auto airline : airlines) {
+        cout << airline->getCode() << " " << airline->getName() << endl;
+    }
 
     if (bestRoutes.empty()) {
         if (filtered)
