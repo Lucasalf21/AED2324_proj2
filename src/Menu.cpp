@@ -555,10 +555,10 @@ void Menu::statistics() const {
 
     while (true){
         cout << " _______________________STATISTICS_______________________ " << endl
-             << " 1 - Global number of airports/flights" << endl
+             << " 1 - Global number of airports and flights" << endl
              << " 2 - Number of flights out of an airport " << endl
              << " 3 - Number of flights per city/airline " << endl
-             << " 4 - Number of countries a airport/city flies to " << endl
+             << " 4 - Countries an airport/city flies to " << endl
              << " 5 - Number of destinations available from an airport " << endl
              << " 6 - Number of reachable destinations from an airport in a maximum number of lay-overs " << endl
              << " 7 - Maximum trip " << endl
@@ -613,20 +613,8 @@ void Menu::statistics() const {
 
 //Statistics options
 void Menu::choice1() const {
-    cout << "Would you like to see the global number of airports(1) or the number of available flights(2)?" << endl;
-    char choice;
-    cout << "Option: ";
-    cin >> choice;
-    switch (choice) {
-        case '1':
-            globalNumAirports();
-            break;
-        case '2':
-            globalNumFlights();
-            break;
-        default:
-            cout << "Invalid choice!" << endl;
-    }
+    globalNumAirports();
+    globalNumFlights();
     cout << "Press enter to continue..."
             << endl;
     cin.ignore();
@@ -719,7 +707,7 @@ void Menu::choice9() const {
 
 //choice 1
 void Menu::globalNumAirports() const {
-    cout << endl << "Number of airports: " << g->getVertexSet().size() << endl << endl;
+    cout << endl << "Number of airports: " << g->getVertexSet().size();
 }
 
 void Menu::globalNumFlights() const {
@@ -742,10 +730,7 @@ void Menu::flightsFromAirport() const {
     set<Airline*> airlines;
     Vertex* airport = g->findVertex(source);
     for (auto& e : airport->adj){
-        Airport* destination = data->getAirport(e.dest->info->getCode());
         Airline* airline = data->getAirline(e.airline->getCode());
-        Flight* flight = data->getFlight(source, destination, airline);
-        flight->printFlight();
         count++;
         airlines.insert(airline);
     }
@@ -765,10 +750,6 @@ void Menu::flightsFromCity() const {
     for (auto a : airports){
         Vertex* airport = g->findVertex(a);
         for (auto& e : airport->adj){
-            Airport* destination = data->getAirport(e.dest->info->getCode());
-            Airline* airline = data->getAirline(e.airline->getCode());
-            Flight* flight = data->getFlight(a, destination, airline);
-            flight->printFlight();
             count++;
         }
     }
@@ -784,11 +765,6 @@ void Menu::flightsFromAirline() const {
     for (auto v : g->getVertexSet()){
         for (auto& e : v->adj){
             if (e.airline->getCode() == airlineCode){
-                Airport* source = data->getAirport(v->info->getCode());
-                Airport* destination = data->getAirport(e.dest->info->getCode());
-                Airline* airline = data->getAirline(e.airline->getCode());
-                Flight* flight = data->getFlight(source, destination, airline);
-                flight->printFlight();
                 count++;
             }
         }
@@ -838,8 +814,8 @@ void Menu::countriesACityFliesTo() const {
 
     cout << endl << "Countries: " << endl;
 
-    for(const auto& country : countries) {
-        cout << country << endl;
+    for(const auto& c : countries) {
+        cout << c << endl;
     }
 
     cout << endl << "Number of countries: " << countries.size() << endl << endl;
@@ -873,49 +849,23 @@ void Menu::destinationsAvailableForAnAirport() const {
         return;
     }
 
-    set<string> uniqueDestinations;
-
-    cout << "Choose the type of destinations:" << endl;
-    cout << "1. Airports" << endl;
-    cout << "2. Cities" << endl;
-    cout << "3. Countries" << endl;
-
-    char choice;
-    cout << "Enter your choice (1-3): ";
-    cin >> choice;
-
-    cout << endl << "Destinations available: " << endl;
+    set<string> airports;
+    set<pair<string, string>> cities;
+    set<string> countries;
 
     for (auto v : g->getVertexSet()){
         if (v->info->getCode() == airportCode){
             for (auto& e : v->adj){
-                string destination;
-                switch (choice) {
-                    case '1':
-                        destination = e.dest->info->getCode();
-                        break;
-                    case '2':
-                        destination = e.dest->info->getCity();
-                        break;
-                    case '3':
-                        destination = e.dest->info->getCountry();
-                        break;
-                    default:
-                        cout << "Invalid choice. Exiting..." << endl;
-                        return;
-                }
-
-                // Add the destination to the set
-                uniqueDestinations.insert(destination);
+                airports.insert(e.dest->info->getCode());
+                cities.insert({e.dest->info->getCity(), e.dest->info->getCountry()});
+                countries.insert(e.dest->info->getCountry());
             }
         }
     }
 
-    for(const auto& destination : uniqueDestinations) {
-        cout << destination << endl;
-    }
-
-    cout << endl << "Number of destinations: " << uniqueDestinations.size() << endl << endl;
+    cout << endl << "Number of airports: " << airports.size() << endl;
+    cout << "Number of cities: " << cities.size() << endl;
+    cout << "Number of countries: " << countries.size() << endl << endl;
 }
 
 //choice 6
@@ -929,22 +879,42 @@ void Menu::reachableDestinationsAirport() const {
         return;
     }
 
-    int maxStops;
+    int layOvers;
     cout << "Enter the maximum number of lay-overs: ";
-    cin >> maxStops;
+    cin >> layOvers;
 
-    cout << "Choose the type of destinations:" << endl;
-    cout << "1. Airports" << endl;
-    cout << "2. Cities" << endl;
-    cout << "3. Countries" << endl;
+    int count;
+    Vertex* source = g->findVertex(airport);
+    set<string> airports;
+    set<pair<string, string>> cities;
+    set<string> countries;
+    queue<pair<Vertex*, int>> q;
 
-    char choice;
-    cout << "Enter your choice (1-3): ";
-    cin >> choice;
+    for (auto v : g->getVertexSet()){
+        v->visited = false;
+    }
+    q.emplace(source, 0);
+    source->visited = true;
 
-    set<string> res = g->countReachableVertices(g->findVertex(airport), maxStops, choice);
+    while (!q.empty()){
+        Vertex* current = q.front().first;
+        count = q.front().second;
+        q.pop();
+        if (count > layOvers) continue;
+        for (auto& e : current->adj){
+            if (!e.dest->visited){
+                airports.insert(e.dest->info->getCode());
+                cities.insert({e.dest->info->getCity(), e.dest->info->getCountry()});
+                countries.insert(e.dest->info->getCountry());
+                e.dest->visited = true;
+                q.emplace(e.dest, count + 1);
+            }
+        }
+    }
 
-    cout << endl << "Number of reachable destinations within " << maxStops << " stops: " << res.size() << endl;
+    cout << endl << "Number of airports: " << airports.size() << endl;
+    cout << "Number of cities: " << cities.size() << endl;
+    cout << "Number of countries: " << countries.size() << endl << endl;
 }
 
 //choice 7
@@ -1008,10 +978,10 @@ void Menu::maximumTrip() const {
         auto source = pair.first;
         for(auto dest : pair.second) {
             auto route = g->bfs(source, dest);
-            for (int i = 0; i < route.size() - 1; i++) {
-                cout << route[i] << " -> ";
-            }
-            cout << route[route.size() - 1] << endl;
+            cout << source->info->getCountry() << " - " << source->info->getCity() << " ("  << source->info->getCode() << ")"
+                    << " --> "
+                    << dest->info->getCountry() << " - " << dest->info->getCity() << " (" << dest->info->getCode() << ")";
+            cout << endl;
         }
     }
     cout << endl;
