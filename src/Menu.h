@@ -18,6 +18,7 @@ public:
     void bestFlightOptionByAirport(const set<Airline*>& airlines = {}) const;
     void bestFlightOptionByCity(const set<Airline*>& airlines = {}) const;
     void bestFlightOptionByCoordinates(const set<Airline*>& airlines = {}) const;
+    void bestFlightOptionMixed(const set<Airline*>& airlines = {}) const;
     void searchWithFilters() const;
 
     void choice1() const;
