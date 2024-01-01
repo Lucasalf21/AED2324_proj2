@@ -201,26 +201,26 @@ Vertex* Graph::findVertex(Airport* a){
     return nullptr;
 }
 
-void Graph::dfsArticulationPoints(Vertex* u, Vertex* parent, set<Vertex*>& articulationPoints, unordered_map<Vertex*, int>& disc, unordered_map<Vertex*, int>& low, int& time) {
+void Graph::dfsArticulationPoints(Vertex* v, Vertex* parent, set<Vertex*>& articulationPoints, unordered_map<Vertex*, int>& disc, unordered_map<Vertex*, int>& low, int& time) {
     int children = 0;
-    disc[u] = low[u] = ++time;
+    disc[v] = low[v] = ++time;
 
-    for (auto& edge : u->adj) {
-        Vertex* v = edge.dest;
+    for (auto& edge : v->adj) {
+        Vertex* v1 = edge.dest;
 
-        if (!v->visited) {
+        if (!v1->visited) {
             children++;
-            v->visited = true;
+            v1->visited = true;
 
-            dfsArticulationPoints(v, u, articulationPoints, disc, low, time);
+            dfsArticulationPoints(v1, v, articulationPoints, disc, low, time);
 
-            low[u] = min(low[u], low[v]);
+            low[v] = min(low[v], low[v1]);
 
-            if ((parent == nullptr && children > 1) || (parent != nullptr && low[v] >= disc[u])) {
-                articulationPoints.insert(u);
+            if ((parent == nullptr && children > 1) || (parent != nullptr && low[v1] >= disc[v])) {
+                articulationPoints.insert(v);
             }
         } else if (v != parent) {
-            low[u] = min(low[u], disc[v]);
+            low[v] = min(low[v], disc[v1]);
         }
     }
 }
@@ -231,14 +231,14 @@ set<Vertex*> Graph::findArticulationPoints() {
     unordered_map<Vertex*, int> low;
     int time = 0;
 
-    for (auto& u : vertexSet) {
-        u->visited = false;
+    for (auto& v : vertexSet) {
+        v->visited = false;
     }
 
-    for (auto& u : vertexSet) {
-        if (!u->visited) {
-            u->visited = true;
-            dfsArticulationPoints(u, nullptr, articulationPoints, disc, low, time);
+    for (auto& v : vertexSet) {
+        if (!v->visited) {
+            v->visited = true;
+            dfsArticulationPoints(v, nullptr, articulationPoints, disc, low, time);
         }
     }
 
@@ -277,4 +277,27 @@ Airport* Graph::getNearestAirportByCoordinates(double latitude, double longitude
     }
 
     return nearestAirport;
+}
+
+void Graph::makeUndirected() {
+    for (auto& v : vertexSet) {
+        for (auto& e : v->adj) {
+            Vertex* dest = e.dest;
+            double weight = e.weight;
+            Airline* airline = e.airline;
+
+            bool reverseEdgeExists = false;
+            for (const auto& reverseEdge : dest->adj) {
+                if (reverseEdge.dest == v) {
+                    reverseEdgeExists = true;
+                    break;
+                }
+            }
+
+            if (!reverseEdgeExists) {
+                Edge reverseEdge(v, airline, weight);
+                dest->adj.push_back(reverseEdge);
+            }
+        }
+    }
 }

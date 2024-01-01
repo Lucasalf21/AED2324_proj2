@@ -1017,5 +1017,7 @@ void Menu::topAirports() const {
 
 //choice 9
 void Menu::essentialAirports() const {
-    cout << endl << "Number of essential airports: " << g->findArticulationPoints().size() << endl << endl;
+    Graph gCopy = *g;
+    gCopy.makeUndirected();
+    cout << endl << "Number of essential airports: " << gCopy.findArticulationPoints().size() << endl << endl;
 }
