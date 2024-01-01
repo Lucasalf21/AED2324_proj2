@@ -194,7 +194,7 @@ Vertex* Graph::findVertex(Airport* a){
         return nullptr;
     }
     for (auto vertex : vertexSet){
-        if (vertex->info->getCode() == a->getCode()){
+        if (vertex->info == a){
             return vertex;
         }
     }
