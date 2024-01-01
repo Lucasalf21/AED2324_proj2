@@ -47,11 +47,11 @@ public:
     vector<pair<string, double>> dijkstra(Vertex* source, Vertex* dest);
     Vertex* findVertex(Airport* v);
     set<Vertex*> findArticulationPoints();
-    void dfsArticulationPoints(Vertex *u, Vertex *parent, set<Vertex *> &articulationPoints, unordered_map<Vertex *, int> &disc, unordered_map<Vertex *, int> &low, int &time);
+    void dfsArticulationPoints(Vertex *v, Vertex *parent, set<Vertex *> &articulationPoints, unordered_map<Vertex *, int> &disc, unordered_map<Vertex *, int> &low, int &time);
     set<Airport*> getAirportsByCity(const string& city, const string& country = "");
     Airport* getNearestAirportByCoordinates(double latitude, double longitude);
-    void dfsLimited(Vertex* v, int layOvers, set<string>& res, char choice);
-    set<string> countReachableVertices(Vertex* source, int layOvers, char choice);
+
+    void makeUndirected();
 };
 
 #endif //AED2324_PROJ2_GRAPH_H

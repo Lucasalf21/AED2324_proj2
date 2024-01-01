@@ -20,3 +20,4 @@ int main() {
     Menu menu = Menu(data, g);
     return 0;
 }
+
