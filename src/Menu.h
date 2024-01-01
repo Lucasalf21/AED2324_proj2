@@ -13,11 +13,12 @@ public:
     Graph* g;
 
     Menu(Data* data, Graph* graph);
-    void statistics();
+    void statistics() const;
     void bestFlightOption(const set<Airline*>& airlines = {}) const;
     void bestFlightOptionByAirport(const set<Airline*>& airlines = {}) const;
     void bestFlightOptionByCity(const set<Airline*>& airlines = {}) const;
     void bestFlightOptionByCoordinates(const set<Airline*>& airlines = {}) const;
+    void bestFlightOptionMixed(const set<Airline*>& airlines = {}) const;
     void searchWithFilters() const;
 
     void choice1() const;
@@ -25,7 +26,7 @@ public:
     void choice3() const;
     void choice4() const;
     void choice5() const;
-    void choice6();
+    void choice6() const;
     void choice7() const;
     void choice8() const;
     void choice9() const;
@@ -39,12 +40,10 @@ public:
     void countriesACityFliesTo() const;
     string checkCountry(const string& cityName) const; // auxiliary function
     void destinationsAvailableForAnAirport() const;
-    void reachableDestinationsAirport();
+    void reachableDestinationsAirport() const;
     void maximumTrip() const;
     void topAirports() const;
     void essentialAirports() const;
-
-    void DFSCountReachableDestinations(Airport *currentAirport, int currentStops, int maxStops, int choice, int &reachableCount, set<string>& res);
 };
 
 

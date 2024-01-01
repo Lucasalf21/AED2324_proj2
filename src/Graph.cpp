@@ -21,7 +21,7 @@ bool Graph::addEdge(Vertex *source, Vertex *dest, Airline *airline){
         double w = airport1->calculateDistance(airport2);
         Edge newConnection(dest, airline, w);
         source->adj.push_back(newConnection);
-        dest->inVertices.insert(source);
+        dest->inVertices.push_back(source);
         return true;
     }
     return false;
@@ -181,7 +181,7 @@ vector<pair<string, double>> Graph::dijkstra(Vertex *source, Vertex *dest){
     Vertex* current = findVertex(dest->info);
 
     while (current != nullptr) {
-        result.push_back({current->info->getCode(), current->distance});
+        result.emplace_back(current->info->getCode(), current->distance);
         current = parentMap[current];
     }
 
@@ -211,7 +211,6 @@ void Graph::dfsArticulationPoints(Vertex* u, Vertex* parent, set<Vertex*>& artic
         if (!v->visited) {
             children++;
             v->visited = true;
-            v->inVertices.insert(u);
 
             dfsArticulationPoints(v, u, articulationPoints, disc, low, time);
 
@@ -279,3 +278,41 @@ Airport* Graph::getNearestAirportByCoordinates(double latitude, double longitude
 
     return nearestAirport;
 }
+
+void Graph::dfsLimited(Vertex *v, int layOvers, set<string>& res, char choice) {
+    v->visited = true;
+    switch (choice) {
+        case '1':
+            res.insert(v->info->getCode());
+            break;
+        case '2':
+            res.insert(v->info->getCity());
+            break;
+        case '3':
+            res.insert(v->info->getCountry());
+            break;
+        default:
+            break;
+    }
+
+    if (layOvers >= 0) {
+        for (const Edge& e : v->adj) {
+            Vertex* w = e.dest;
+            if (!w->visited) {
+                dfsLimited(w, layOvers - 1, res, choice);
+            }
+        }
+    }
+}
+
+set<string> Graph::countReachableVertices(Vertex *source, int layOvers, char choice) {
+    set<string> res;
+
+    for (auto& v : vertexSet) {
+        v->visited = false;
+    }
+
+    dfsLimited(source, layOvers, res, choice);
+    return res;
+}
+

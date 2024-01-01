@@ -13,9 +13,9 @@ using namespace std;
 Menu::Menu(Data* data, Graph* graph){
     this->data = data;
     g = graph;
-    int choice = 1;
+    char choice = '1';
 
-    while (choice != 0){
+    while (true){
         cout << endl << " __________________________________________________ " << endl
              << " 1 - Statistics" << endl
              << " 2 - Find the best flight option" << endl
@@ -29,17 +29,17 @@ Menu::Menu(Data* data, Graph* graph){
         cout << endl;
 
         switch (choice) {
-            case 1:
+            case '1':
                 statistics();
                 break;
-            case 2:
+            case '2':
                 bestFlightOption();
                 break;
-            case 3:
+            case '3':
                 searchWithFilters();
                 break;
-            case 0:
-                break;
+            case '0':
+                exit(0);
             default:
                 cout << "Invalid choice!" << endl;
         }
@@ -52,7 +52,8 @@ void Menu::bestFlightOption(const set<Airline*>& airlines) const {
          << "Choose the type of destination:" << endl << endl
          << "1 - Airport" << endl
          << "2 - City" << endl
-         << "3 - Coordinates" << endl << endl
+         << "3 - Coordinates" << endl
+         << "4 - Mixed" << endl << endl
 
          << "b - Go back" << endl
          << "0 - Exit" << endl
@@ -71,6 +72,9 @@ void Menu::bestFlightOption(const set<Airline*>& airlines) const {
             break;
         case '3':
             bestFlightOptionByCoordinates(airlines);
+            break;
+        case '4':
+            bestFlightOptionMixed(airlines);
             break;
         case 'b':
             return;
@@ -304,6 +308,227 @@ void Menu::bestFlightOptionByCoordinates(const set<Airline *>& airlines) const {
     cout << endl;
 }
 
+void Menu::bestFlightOptionMixed(const set<Airline*>& airlines) const {
+    bool filtered = !airlines.empty();
+    char choice1;
+    cout << "Choose the type of the source (airport(1), city(2), coordinates(3)): ";
+    cin >> choice1;
+
+    string source;
+    Airport* a1Source;
+    set<Airport*> a2Source;
+    string countrySource;
+    double sourceLat;
+    double sourceLong;
+    switch (choice1){
+        case '1':
+            cout << "Choose origin airport: ";
+            cin >> source;
+            a1Source = data->getAirport(source);
+            if (a1Source == nullptr){
+                cout << "Airport not found!" << endl;
+                return;
+            }
+            source = a1Source->getName();
+            break;
+        case '2':
+            cout << "Choose origin city: ";
+            cin.ignore();
+            getline(cin, source);
+            countrySource = checkCountry(source);
+            a2Source = g->getAirportsByCity(source, countrySource);
+            if (a2Source.empty()){
+                cout << "Airport not found!" << endl;
+                return;
+            }
+            break;
+        case '3':
+            cout << "Choose origin coordinates: ";
+            cin >> sourceLat >> sourceLong;
+            a1Source = g->getNearestAirportByCoordinates(sourceLat, sourceLong);
+            if (a1Source == nullptr){
+                cout << "Airport not found!" << endl;
+                return;
+            }
+            source = a1Source->getName();
+            break;
+        default:
+            cout << "Invalid choice!" << endl;
+            return;
+    }
+
+    char choice2;
+    cout << "Choose the type of the destination (airport(1), city(2), coordinates(3)): ";
+    cin >> choice2;
+
+    string dest;
+    Airport* a1Dest;
+    set<Airport*> a2Dest;
+    string countryDest;
+    double destLat;
+    double destLong;
+    switch (choice2){
+        case '1':
+            cout << "Choose destination airport: ";
+            cin >> dest;
+            a1Dest = data->getAirport(dest);
+            if (a1Dest == nullptr){
+                cout << "Airport not found!" << endl;
+                return;
+            }
+            dest = a1Dest->getName();
+            break;
+        case '2':
+            cout << "Choose destination city: ";
+            cin.ignore();
+            getline(cin, dest);
+            countryDest = checkCountry(dest);
+            a2Dest = g->getAirportsByCity(dest, countryDest);
+            if (a2Dest.empty()){
+                cout << "Airport not found!" << endl;
+                return;
+            }
+            break;
+        case '3':
+            cout << "Choose destination coordinates: ";
+            cin >> destLat >> destLong;
+            a1Dest = g->getNearestAirportByCoordinates(destLat, destLong);
+
+            if (a1Dest == nullptr){
+                cout << "Airport not found!" << endl;
+                return;
+            }
+            dest = a1Dest->getName();
+            break;
+        default:
+            cout << "Invalid choice!" << endl;
+            return;
+    }
+
+    set<vector<Vertex *>> bestRoutes;
+
+    if (choice1 == '2' && choice2 == '2'){
+        int minSize = INT_MAX;
+        for (auto a : a2Source){
+            for (auto b : a2Dest){
+                Vertex* s = g->findVertex(a);
+                Vertex* d = g->findVertex(b);
+                set<vector<Vertex *>> routes = g->findAllShortestPaths(s, d, airlines);
+                bestRoutes.insert(routes.begin(), routes.end());
+            }
+        }
+
+        for (const auto& route : bestRoutes){
+            if (route.size() < minSize){
+                minSize = route.size();
+            }
+        }
+
+        for (auto it = bestRoutes.begin(); it != bestRoutes.end();){
+            if ((*it).size() > minSize){
+                it = bestRoutes.erase(it);
+            }
+            else{
+                it++;
+            }
+        }
+    }
+    else if (choice1 == '2'){
+        int minSize = INT_MAX;
+        for (auto a : a2Source){
+            Vertex* s = g->findVertex(a);
+            Vertex* d = g->findVertex(a1Dest);
+            set<vector<Vertex *>> routes = g->findAllShortestPaths(s, d, airlines);
+            bestRoutes.insert(routes.begin(), routes.end());
+        }
+
+        for (const auto& route : bestRoutes){
+            if (route.size() < minSize){
+                minSize = route.size();
+            }
+        }
+
+        for (auto it = bestRoutes.begin(); it != bestRoutes.end();){
+            if ((*it).size() > minSize){
+                it = bestRoutes.erase(it);
+            }
+            else{
+                it++;
+            }
+        }
+    }
+    else if (choice2 == '2'){
+        int minSize = INT_MAX;
+        for (auto a : a2Dest){
+            Vertex* s = g->findVertex(a1Source);
+            Vertex* d = g->findVertex(a);
+            set<vector<Vertex *>> routes = g->findAllShortestPaths(s, d, airlines);
+            bestRoutes.insert(routes.begin(), routes.end());
+        }
+
+        for (const auto& route : bestRoutes){
+            if (route.size() < minSize){
+                minSize = route.size();
+            }
+        }
+
+        for (auto it = bestRoutes.begin(); it != bestRoutes.end();){
+            if ((*it).size() > minSize){
+                it = bestRoutes.erase(it);
+            }
+            else{
+                it++;
+            }
+        }
+    }
+    else{
+        Vertex* s = g->findVertex(a1Source);
+        Vertex* d = g->findVertex(a1Dest);
+        set<vector<Vertex *>> routes = g->findAllShortestPaths(s, d, airlines);
+        bestRoutes.insert(routes.begin(), routes.end());
+    }
+
+    cout << "Selected Airlines: " << endl;
+    for (auto airline : airlines) {
+        cout << airline->getCode() << " " << airline->getName() << endl;
+    }
+
+    if (bestRoutes.empty()) {
+        if (filtered)
+            cout << endl << "There are no routes from " << source << " to " << dest
+                 << " with the selected airlines." << endl << endl;
+        else
+            cout << endl << "There are no routes from " << source << " to " << dest << "." << endl
+                 << endl;
+
+        return;
+    }
+
+    if (bestRoutes.size() > 1) {
+        cout << endl << "The best routes from " << source << " to " << dest;
+        if(filtered)
+            cout << " with the selected airlines";
+        cout << " go through:" << endl << endl;
+    }
+    else {
+        cout << endl << "The best route from " << source << " to " << dest;
+        if(filtered)
+            cout << " with the selected airlines";
+        cout << " goes through:" << endl << endl;
+    }
+
+    for(auto& route : bestRoutes) {
+        cout << route[0]->info->getCode() << "->";
+        for (int i = 1; i < route.size() - 1; i++) {
+            cout << route[i]->info->getCode() << "->";
+        }
+        cout << route[route.size() - 1]->info->getCode() << endl;
+    }
+
+    cout << endl;
+
+}
+
 void Menu::searchWithFilters() const {
     cout << "Choose the airlines you want to fly with" << endl
         <<  "Enter the airline's code or 0 to stop: " << endl;
@@ -325,7 +550,7 @@ void Menu::searchWithFilters() const {
 }
 
 //statistics menu
-void Menu::statistics() {
+void Menu::statistics() const {
     char choice = '1';
 
     while (true){
@@ -462,7 +687,7 @@ void Menu::choice5() const {
     cin.get();
 }
 
-void Menu::choice6() {
+void Menu::choice6() const {
     reachableDestinationsAirport();
     cout << "Press enter to continue...";
     cin.ignore();
@@ -648,14 +873,14 @@ void Menu::destinationsAvailableForAnAirport() const {
         return;
     }
 
-    set<string> uniqueDestinations;  // Use a set to keep track of unique destinations
+    set<string> uniqueDestinations;
 
     cout << "Choose the type of destinations:" << endl;
     cout << "1. Airports" << endl;
     cout << "2. Cities" << endl;
     cout << "3. Countries" << endl;
 
-    int choice;
+    char choice;
     cout << "Enter your choice (1-3): ";
     cin >> choice;
 
@@ -666,14 +891,14 @@ void Menu::destinationsAvailableForAnAirport() const {
             for (auto& e : v->adj){
                 string destination;
                 switch (choice) {
-                    case 1:
-                        destination = e.dest->info->getCode();  // Airports
+                    case '1':
+                        destination = e.dest->info->getCode();
                         break;
-                    case 2:
-                        destination = e.dest->info->getCity();  // Cities
+                    case '2':
+                        destination = e.dest->info->getCity();
                         break;
-                    case 3:
-                        destination = e.dest->info->getCountry();  // Countries
+                    case '3':
+                        destination = e.dest->info->getCountry();
                         break;
                     default:
                         cout << "Invalid choice. Exiting..." << endl;
@@ -686,17 +911,15 @@ void Menu::destinationsAvailableForAnAirport() const {
         }
     }
 
-    // Print the unique destinations
     for(const auto& destination : uniqueDestinations) {
         cout << destination << endl;
     }
 
-    // Print the total number of unique destinations
     cout << endl << "Number of destinations: " << uniqueDestinations.size() << endl << endl;
 }
 
 //choice 6
-void Menu::reachableDestinationsAirport() {
+void Menu::reachableDestinationsAirport() const {
     string airportCode;
     cout << endl << "Enter the desired airport's code: " << endl;
     cin >> airportCode;
@@ -707,63 +930,21 @@ void Menu::reachableDestinationsAirport() {
     }
 
     int maxStops;
-    cout << "Enter the maximum number of stops: ";
+    cout << "Enter the maximum number of lay-overs: ";
     cin >> maxStops;
 
-    int reachableCount = 0;
-
-    // Choose the type of destinations
     cout << "Choose the type of destinations:" << endl;
     cout << "1. Airports" << endl;
     cout << "2. Cities" << endl;
     cout << "3. Countries" << endl;
 
-    int choice;
+    char choice;
     cout << "Enter your choice (1-3): ";
     cin >> choice;
 
-    set<string> res;
-
-    // Perform DFS to count reachable destinations within maxStops
-    DFSCountReachableDestinations(airport, 0, maxStops, choice, reachableCount, res);
+    set<string> res = g->countReachableVertices(g->findVertex(airport), maxStops, choice);
 
     cout << endl << "Number of reachable destinations within " << maxStops << " stops: " << res.size() << endl;
-}
-
-// DFS helper function to count reachable destinations
-void Menu::DFSCountReachableDestinations(Airport* currentAirport, int currentStops, int maxStops, int choice, int& reachableCount, set<string>& res) {
-
-    if (currentStops > maxStops) {
-        return;  // Stop DFS if exceeding maximum stops
-    }
-
-    // Process the current airport as a reachable destination
-    reachableCount++;
-
-    // Output the type of destination based on user's choice
-    switch (choice) {
-        case 1:
-            res.insert(currentAirport->getCode());  // Airports
-            break;
-        case 2:
-            res.insert(currentAirport->getCity());  // Cities
-            break;
-        case 3:
-            res.insert(currentAirport->getCountry());  // Countries
-            break;
-        default:
-            cout << "Invalid choice. Exiting..." << endl;
-            return;
-    }
-
-    // Get connected airports and continue DFS
-    Vertex* currentVertex = g->findVertex(currentAirport);
-    if (currentVertex != nullptr) {
-        for (Edge& edge : currentVertex->adj) {
-            Airport* nextAirport = edge.dest->info;
-            DFSCountReachableDestinations(nextAirport, currentStops + 1, maxStops, choice, reachableCount, res);
-        }
-    }
 }
 
 //choice 7
@@ -801,11 +982,7 @@ void Menu::maximumTrip() const {
             return;
         }
 
-        /*cout << "TESTES: " << endl << "SourceCode inserido: " << sourceCode << endl
-                                    << "Airport: " << airport->getCode() << endl;*/
-
         sources.push_back(g->findVertex(airport));
-        //cout << "Sources size: " << sources.size() << endl;
     }
     else {
         cout << "Invalid choice!" << endl;
@@ -841,22 +1018,29 @@ void Menu::maximumTrip() const {
 }
 
 //choice 8
+bool compare(const pair<int, Vertex*>& a, const pair<int, Vertex*>& b){
+    return a.first > b.first;
+}
+
 void Menu::topAirports() const {
-    vector<Airport*> airports;
+    vector<pair<int, Vertex*>> airports;
     for (auto v : g->getVertexSet()){
-        airports.push_back(v->info);
+        airports.emplace_back(v->adj.size() + v->inVertices.size(), v);
     }
-    std::sort(airports.begin(), airports.end(), [](Airport* a, Airport* b) {
-        return a->getNumFlights() > b->getNumFlights();
-    });
+    sort(airports.begin(), airports.end(), compare);
 
     cout << endl << "How many airports do you want to see? " << endl;
     int numAirports;
     cin >> numAirports;
     cout << endl;
     cout << "Top " << numAirports << " airports with greatest air traffic capacity: " << endl << endl;
-    for(int i = 0; i < numAirports; i++) {
-        cout << airports[i]->getName() << " (" << airports[i]->getCode() << ") - " << airports[i]->getNumFlights() << " flights" << endl;
+    int count = 1;
+    for (auto a : airports){
+        if (count > numAirports){
+            break;
+        }
+        cout << count << ". " << a.second->info->getName() << " (" << a.second->info->getCode() << ") - " << a.first << " flights" << endl;
+        count++;
     }
     cout << endl;
 }
@@ -865,4 +1049,3 @@ void Menu::topAirports() const {
 void Menu::essentialAirports() const {
     cout << endl << "Number of essential airports: " << g->findArticulationPoints().size() << endl << endl;
 }
-
