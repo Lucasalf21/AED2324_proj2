@@ -148,47 +148,6 @@ double Graph::findMaxDistance(Vertex *source) {
     return maxDistance;
 }
 
-vector<pair<string, double>> Graph::dijkstra(Vertex *source, Vertex *dest){
-    vector<pair<string, double>> result;
-
-    for (auto v : vertexSet) {
-        v->distance = DBL_MAX;
-    }
-
-    set<pair<double, Vertex*>> priorityQueue;
-    source->distance = 0;
-    priorityQueue.insert({source->distance, source});
-    unordered_map<Vertex*, Vertex*> parentMap;
-
-    while (!priorityQueue.empty()) {
-        Vertex* current = priorityQueue.begin()->second;
-        priorityQueue.erase(priorityQueue.begin());
-
-        for (auto& e : current->adj) {
-            Vertex* w = e.dest;
-            double newDistance = current->distance + e.weight;
-
-            if (newDistance < w->distance) {
-                priorityQueue.erase({w->distance, w});
-                w->distance = newDistance;
-                priorityQueue.insert({w->distance, w});
-
-                parentMap[w] = current;
-            }
-        }
-    }
-
-    Vertex* current = findVertex(dest->info);
-
-    while (current != nullptr) {
-        result.emplace_back(current->info->getCode(), current->distance);
-        current = parentMap[current];
-    }
-
-    reverse(result.begin(), result.end());
-    return result;
-}
-
 Vertex* Graph::findVertex(Airport* a){
     if(this->vertexSet.empty()){
         return nullptr;

@@ -44,7 +44,6 @@ public:
     vector<string> bfs(Vertex* source, Vertex* dest, set<Airline*> airlines = {});
     set<vector<Vertex*>> findAllShortestPaths(Vertex* start, Vertex* end, set<Airline*> airlines = {});
     double findMaxDistance(Vertex* source);
-    vector<pair<string, double>> dijkstra(Vertex* source, Vertex* dest);
     Vertex* findVertex(Airport* v);
     set<Vertex*> findArticulationPoints();
     void dfsArticulationPoints(Vertex *v, Vertex *parent, set<Vertex *> &articulationPoints, unordered_map<Vertex *, int> &disc, unordered_map<Vertex *, int> &low, int &time);
