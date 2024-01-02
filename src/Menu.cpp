@@ -142,8 +142,7 @@ void Menu::bestFlightOptionByAirport(const set<Airline *>& airlines) const {
     }
 
     for(auto& route : bestRoutes) {
-        cout << route[0]->info->getCode() << "->";
-        for (int i = 1; i < route.size() - 1; i++) {
+        for (int i = 0; i < route.size() - 1; i++) {
             cout << route[i]->info->getCode() << "->";
         }
         cout << route[route.size() - 1]->info->getCode() << endl;
@@ -232,8 +231,7 @@ void Menu::bestFlightOptionByCity(const set<Airline *>& airlines) const {
     }
 
     for(auto& route : bestRoutes) {
-        cout << route[0]->info->getCode() << "->";
-        for (int i = 1; i < route.size() - 1; i++) {
+        for (int i = 0; i < route.size() - 1; i++) {
             cout << route[i]->info->getCode() << "->";
         }
         cout << route[route.size() - 1]->info->getCode() << endl;
@@ -298,8 +296,7 @@ void Menu::bestFlightOptionByCoordinates(const set<Airline *>& airlines) const {
     }
 
     for(auto& route : bestRoutes) {
-        cout << route[0]->info->getCode() << "->";
-        for (int i = 1; i < route.size() - 1; i++) {
+        for (int i = 0; i < route.size() - 1; i++) {
             cout << route[i]->info->getCode() << "->";
         }
         cout << route[route.size() - 1]->info->getCode() << endl;
@@ -518,8 +515,7 @@ void Menu::bestFlightOptionMixed(const set<Airline*>& airlines) const {
     }
 
     for(auto& route : bestRoutes) {
-        cout << route[0]->info->getCode() << "->";
-        for (int i = 1; i < route.size() - 1; i++) {
+        for (int i = 0; i < route.size() - 1; i++) {
             cout << route[i]->info->getCode() << "->";
         }
         cout << route[route.size() - 1]->info->getCode() << endl;
