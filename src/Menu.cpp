@@ -976,7 +976,8 @@ void Menu::maximumTrip() const {
             auto route = g->bfs(source, dest);
             cout << source->info->getCountry() << " - " << source->info->getCity() << " ("  << source->info->getCode() << ")"
                     << " --> "
-                    << dest->info->getCountry() << " - " << dest->info->getCity() << " (" << dest->info->getCode() << ")";
+                    << dest->info->getCountry() << " - " << dest->info->getCity() << " (" << dest->info->getCode() << ") ("
+                    << route.size() - 1 << " stops): ";
             cout << endl;
         }
     }
