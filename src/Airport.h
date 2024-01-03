@@ -23,7 +23,18 @@ public:
     int getNumFlights() const;
     float getLatitude() const;
     float getLongitude() const;
+    /**
+     * @brief Calculates the distance between this airport and another airport. Complexity: O(1)
+     * @param dest The other airport
+     * @return The distance between the two airports
+     */
     double calculateDistance(Airport* dest) const;
+    /**
+     * @brief Calculates the distance between this airport and a pair of coordinates. Complexity: O(1)
+     * @param lat The latitude
+     * @param lon The longitude
+     * @return The distance between the airport and the coordinates
+     */
     double calculateDistance(double lat, double lon) const;
     bool operator <(const Airport& airport) const;
     bool operator =(const Airport& airport);
